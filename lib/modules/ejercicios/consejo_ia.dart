@@ -12,19 +12,18 @@ class ConsejoIAScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Sección superior con imagen y texto EN FILA - SIN CONTAINER
             Padding(
               padding: const EdgeInsets.all(20),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // Texto - CON MÁRGEN IZQUIERDO AUMENTADO
+                  // Texto
                   Expanded(
                     child: Container(
                       margin: const EdgeInsets.only(right: 16, left: 30),
                       child: const Padding(
-                        padding: EdgeInsets.only(top: 20), // SOLO el párrafo bajado
+                        padding: EdgeInsets.only(top: 20), 
                         child: Text(
                           'Analizaremos tus puntos fuertes y áreas de mejora, con recomendaciones concretas para tu desarrollo.',
                           style: TextStyle(
@@ -37,7 +36,7 @@ class ConsejoIAScreen extends StatelessWidget {
                     ),
                   ),
                   
-                  // Imagen del personaje - SIN CAMBIOS
+                  // Imagen del personaje
                   Container(
                     margin: const EdgeInsets.only(left: 5),
                     child: SizedBox(

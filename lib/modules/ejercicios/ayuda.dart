@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../widgets/appbar.dart' as appbar_file; // IMPORTAR APP BAR
+import '../../widgets/appbar.dart' as appbar_file; 
 
 class GuiaSolucionScreen extends StatelessWidget {
   const GuiaSolucionScreen({super.key});
@@ -7,16 +7,16 @@ class GuiaSolucionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // APPBAR IMPORTADO CON MÓDULO RESALTADO
+      // APPBAR
       appBar: appbar_file.AppBarComponents.buildAppBar(
         context, 
         'SEMANA 1: Ecuaciones lineales'
       ),
       body: Column(
         children: [
-          // Header con título "GUIA DE SOLUCION" - FUERA DEL APPBAR Y CON FONDO BLANCO
+          // Header con título "GUIA DE SOLUCION"
           Container(
-            color: Colors.white, // FONDO BLANCO
+            color: Colors.white, 
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: Row(
               children: [
@@ -28,7 +28,7 @@ class GuiaSolucionScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Icon(
-                    Icons.help_outline, // Icono temporal
+                    Icons.help_outline,
                     color: Colors.white,
                     size: 20,
                   ),
@@ -103,7 +103,7 @@ class GuiaSolucionScreen extends StatelessWidget {
           ),
         ],
       ),
-      // BOTTOM NAVIGATION BAR CON MÓDULO RESALTADO
+      // BOTTOM NAVIGATION BAR
       bottomNavigationBar: appbar_file.AppBarComponents.buildBottomNavBar(context, 1),
     );
   }

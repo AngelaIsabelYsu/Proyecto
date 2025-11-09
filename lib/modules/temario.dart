@@ -172,7 +172,7 @@ class _TemarioScreenState extends State<TemarioScreen> {
     },
   ];
 
-  // TEMAS PARA APLICACIONES (EJEMPLO - PUEDES MODIFICAR)
+  // TEMAS PARA APLICACIONES (EJEMPLO)
   final List<Map<String, dynamic>> _temasAplicaciones = [
     {
       'numero': '1',

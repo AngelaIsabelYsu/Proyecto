@@ -16,10 +16,10 @@ class _EstadisticasScreenState extends State<EstadisticasScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       
-      // APPBAR CORREGIDO - sin el parámetro currentScreen
+      // APPBAR 
       appBar: appbar_file.AppBarComponents.buildAppBar(context, 'Estadísticas'),
       
-      // DRAWER CORREGIDO - manteniendo currentScreen si está definido en MenuComponents
+      // DRAWER
       drawer: menu_file.MenuComponents.buildDrawer(context, currentScreen: 'estadisticas'),
       
       // CONTENIDO PRINCIPAL - ESTADÍSTICAS

@@ -27,8 +27,7 @@ class _EjerciciosScreenState extends State<EjerciciosScreen> {
   ];
   String currentMotivationalPhrase = '';
 
-  // Variables para el cronómetro
-  int remainingSeconds = 25 * 60; // 25 minutos en segundos
+  int remainingSeconds = 25 * 60;
   Timer? countdownTimer;
 
   @override
@@ -172,8 +171,6 @@ class _EjerciciosScreenState extends State<EjerciciosScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-
-      // APPBAR
       appBar: appbar_file.AppBarComponents.buildAppBar(
         context,
         'SEMANA 1: Ecuaciones lineales',
@@ -181,12 +178,11 @@ class _EjerciciosScreenState extends State<EjerciciosScreen> {
 
       body: Column(
         children: [
-          // BARRA DE PROGRESO + CRONÓMETRO (cronómetro más a la izquierda)
+          // Barra de progreso
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             child: Column(
               children: [
-                // Barra de progreso con corona
                 Row(
                   children: [
                     Expanded(
@@ -233,13 +229,12 @@ class _EjerciciosScreenState extends State<EjerciciosScreen> {
                   ],
                 ),
 
-                // Espacio aumentado y cronómetro más a la izquierda
                 const SizedBox(height: 16),
                 Container(
-                  alignment: Alignment.centerLeft, // Alinea todo a la izquierda
+                  alignment: Alignment.centerLeft,
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start, // Alineación izquierda
-                    mainAxisSize: MainAxisSize.min, // Ocupa solo el espacio necesario
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       const Text(
                         'Te quedan ',
@@ -272,16 +267,14 @@ class _EjerciciosScreenState extends State<EjerciciosScreen> {
             ),
           ),
 
-          // ESPACIO AUMENTADO entre cronómetro y card de ejercicio
-          const SizedBox(height: 24),
+          const SizedBox(height: 12),
 
-          // CONTENIDO PRINCIPAL
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
                 children: [
-                  // CARD DEL EJERCICIO
+                  // Card del ejercicio
                   Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
@@ -294,7 +287,6 @@ class _EjerciciosScreenState extends State<EjerciciosScreen> {
                     ),
                     child: Column(
                       children: [
-                        // Encabezado ejercicio
                         Container(
                           width: double.infinity,
                           padding: const EdgeInsets.symmetric(
@@ -316,7 +308,6 @@ class _EjerciciosScreenState extends State<EjerciciosScreen> {
                           ),
                         ),
 
-                        // Contenido ejercicio
                         Padding(
                           padding: const EdgeInsets.all(24),
                           child: Column(
@@ -383,10 +374,9 @@ class _EjerciciosScreenState extends State<EjerciciosScreen> {
                     ),
                   ),
 
-                  // MENOS ESPACIO entre card y botón para subir los botones
                   const SizedBox(height: 8),
 
-                  // BOTÓN SIGUIENTE
+                  // Botón siguiente
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
@@ -412,46 +402,41 @@ class _EjerciciosScreenState extends State<EjerciciosScreen> {
                     ),
                   ),
 
-                  // MÁS ESPACIO antes de la sección de la llama para bajarla
                   const SizedBox(height: 16),
 
-                  // SECCIÓN DE LA LLAMA (bajada con más espacio arriba)
+                  // Sección llama y card de ayuda
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Imagen de la llama bajada
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 8), // Baja un poco más la llama
-                        child: Image.asset(
-                          'assets/images/llama.png',
-                          width: 180,
-                          height: 180,
-                          filterQuality: FilterQuality.high,
-                          isAntiAlias: true,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Container(
-                              width: 180,
-                              height: 180,
-                              decoration: BoxDecoration(
-                                color: Colors.orange[100],
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: const Icon(
-                                Icons.pets,
-                                size: 90,
-                                color: Colors.orange,
-                              ),
-                            );
-                          },
-                        ),
+                      Image.asset(
+                        'assets/images/llama.png',
+                        width: 180,
+                        height: 180,
+                        filterQuality: FilterQuality.high,
+                        isAntiAlias: true,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            width: 180,
+                            height: 180,
+                            decoration: BoxDecoration(
+                              color: Colors.orange[100],
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: const Icon(
+                              Icons.pets,
+                              size: 90,
+                              color: Colors.orange,
+                            ),
+                          );
+                        },
                       ),
-                      const SizedBox(width: 8),
-                      Expanded(
+                      const SizedBox(width: 4),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.4,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             if (showMotivationalMessage)
-                              // MENSAJE MOTIVACIONAL
                               Container(
                                 padding: const EdgeInsets.all(16),
                                 decoration: BoxDecoration(
@@ -480,12 +465,13 @@ class _EjerciciosScreenState extends State<EjerciciosScreen> {
                                 ),
                               )
                             else if (currentExercise < totalExercises)
-                              // CARD DE AYUDA + BOTONES
+                              // Card de pregunta guía
                               Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Container(
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 16, vertical: 14),
+                                        horizontal: 12, vertical: 12),
                                     decoration: BoxDecoration(
                                       color: const Color(0xFF42A5F5),
                                       borderRadius: BorderRadius.circular(16),
@@ -494,16 +480,16 @@ class _EjerciciosScreenState extends State<EjerciciosScreen> {
                                       '¿Te doy una guía\npara avanzar?',
                                       style: TextStyle(
                                         color: Colors.white,
-                                        fontSize: 15,
+                                        fontSize: 14,
                                         fontWeight: FontWeight.w500,
                                         height: 1.3,
                                       ),
                                       textAlign: TextAlign.center,
                                     ),
                                   ),
-                                  const SizedBox(height: 10),
+                                  const SizedBox(height: 6),
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       ElevatedButton(
                                         onPressed: () {
@@ -516,13 +502,11 @@ class _EjerciciosScreenState extends State<EjerciciosScreen> {
                                           );
                                         },
                                         style: ElevatedButton.styleFrom(
-                                          backgroundColor:
-                                              const Color(0xFF65C438),
+                                          backgroundColor: const Color(0xFF65C438),
                                           padding: const EdgeInsets.symmetric(
-                                              horizontal: 28, vertical: 10),
+                                              horizontal: 20, vertical: 8),
                                           shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(20),
+                                            borderRadius: BorderRadius.circular(16),
                                           ),
                                           elevation: 0,
                                         ),
@@ -531,21 +515,19 @@ class _EjerciciosScreenState extends State<EjerciciosScreen> {
                                           style: TextStyle(
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold,
-                                            fontSize: 15,
+                                            fontSize: 14,
                                           ),
                                         ),
                                       ),
-                                      const SizedBox(width: 12),
+                                      const SizedBox(width: 8),
                                       ElevatedButton(
                                         onPressed: _handleNoButton,
                                         style: ElevatedButton.styleFrom(
-                                          backgroundColor:
-                                              const Color(0xFFE00025),
+                                          backgroundColor: const Color(0xFFE00025),
                                           padding: const EdgeInsets.symmetric(
-                                              horizontal: 28, vertical: 10),
+                                              horizontal: 20, vertical: 8),
                                           shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(20),
+                                            borderRadius: BorderRadius.circular(16),
                                           ),
                                           elevation: 0,
                                         ),
@@ -554,7 +536,7 @@ class _EjerciciosScreenState extends State<EjerciciosScreen> {
                                           style: TextStyle(
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold,
-                                            fontSize: 15,
+                                            fontSize: 14,
                                           ),
                                         ),
                                       ),
@@ -563,16 +545,15 @@ class _EjerciciosScreenState extends State<EjerciciosScreen> {
                                 ],
                               )
                             else
-                              // ÚLTIMO EJERCICIO
                               Container(
                                 padding: const EdgeInsets.all(16),
                                 decoration: BoxDecoration(
                                   color: const Color(0xFFFFA726),
                                   borderRadius: BorderRadius.circular(16),
                                 ),
-                                child: const Row(
+                                child: Row(
                                   children: [
-                                    Icon(
+                                    const Icon(
                                       Icons.star,
                                       color: Colors.white,
                                       size: 24,

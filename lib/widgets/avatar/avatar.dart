@@ -13,7 +13,7 @@ class AvatarScreen extends StatefulWidget {
 }
 
 class _AvatarScreenState extends State<AvatarScreen> {
-  // LISTA DE AVATARS DISPONIBLES - CAMPO FINAL
+  // LISTA DE AVATARS
   final List<Map<String, dynamic>> _avatars = [
     {
       'image': 'assets/images/ahipopotamo.png',
@@ -23,7 +23,7 @@ class _AvatarScreenState extends State<AvatarScreen> {
       'color': const Color(0xFFFFC1CC),
       'description': 'Ignix no corre, ni se apura. Prefiere pensar despacio, como flotando en ideas. Cuando todo parece difícil, él sonríe y dice: "Respira... cada número tiene su ritmo". Su calma ayuda a resolver incluso los ejercicios más rebeldes.',
       'isEquipped': false,
-      'customName': 'IGNIX', // Nombre por defecto
+      'customName': 'IGNIX', 
     },
     {
       'image': 'assets/images/aleon.png',
@@ -33,7 +33,7 @@ class _AvatarScreenState extends State<AvatarScreen> {
       'color': const Color(0xFFFFF4CC),
       'description': 'Brizali siempre creyó que cada problema matemático era una aventura. Cuando un estudiante dudaba, él rugía suve: "¡Tú puedes!" Con su melena brillante y corazón fuerte, enseña que el coraje es la clave para avanzar.',
       'isEquipped': false,
-      'customName': 'BRIZALI', // Nombre por defecto
+      'customName': 'BRIZALI', 
     },
     {
       'image': 'assets/images/aconejo.png',
@@ -43,7 +43,7 @@ class _AvatarScreenState extends State<AvatarScreen> {
       'color': const Color(0xFFD4F4F4),
       'description': 'Drop! brinca de sumas a ecuaciones como si fueran charcos. Aunque a veces se equivoca, nunca se rinde. Él cree que los errores son saltos que te llevan más alto. Su energía contagiosa motiva a aprender más!',
       'isEquipped': false,
-      'customName': 'DROP!', // Nombre por defecto
+      'customName': 'DROP!', 
     },
   ];
 
@@ -96,7 +96,7 @@ class _AvatarScreenState extends State<AvatarScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
 
-      // APPBAR IMPORTADO - usando AppBarComponents
+      // APPBAR IMPORTADO
       appBar: appbar_file.AppBarComponents.buildAppBar(context, 'Avatar'),
 
       // MENÚ LATERAL
@@ -264,7 +264,7 @@ class _AvatarScreenState extends State<AvatarScreen> {
         ],
       ),
 
-      // BARRA DE NAVEGACIÓN INFERIOR IMPORTADA - SIN RESALTADO
+      // BARRA DE NAVEGACIÓN
       bottomNavigationBar: appbar_file.AppBarComponents.buildBottomNavBar(context, 0, noHighlight: true),
     );
   }

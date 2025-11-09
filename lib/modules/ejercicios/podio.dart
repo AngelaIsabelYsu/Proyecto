@@ -61,7 +61,7 @@ class _PodioScreenState extends State<PodioScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       
-      // APPBAR CORREGIDO - usando AppBarComponents
+      // APPBAR
       appBar: appbar_file.AppBarComponents.buildAppBar(
         context, 
         'SEMANA 1: Ecuaciones lineales'
@@ -238,7 +238,7 @@ class _PodioScreenState extends State<PodioScreen> {
         ],
       ),
       
-      // BOTTOM NAVIGATION BAR CORREGIDO - índice 1 para Módulos
+      // BOTTOM NAVIGATION BAR
       bottomNavigationBar: appbar_file.AppBarComponents.buildBottomNavBar(context, 1),
     );
   }

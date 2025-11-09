@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'ejercicios.dart'; // Importa la pantalla de ejercicios
-import '../../widgets/appbar.dart' as appbar_file; // IMPORTAR APP BAR
+import 'ejercicios.dart'; 
+import '../../widgets/appbar.dart' as appbar_file; 
 
 class Exercise {
   final int number;
@@ -55,7 +55,7 @@ class SemanaEjerciciosScreen extends StatefulWidget {
 }
 
 class _SemanaEjerciciosScreenState extends State<SemanaEjerciciosScreen> {
-  final int _completedExercises = 0; // Cambiado a 0 para mostrar progreso mínimo
+  final int _completedExercises = 0; 
   final int _totalExercises = 4;
 
   late List<ExerciseItem> _exercises;
@@ -198,7 +198,7 @@ class _SemanaEjerciciosScreenState extends State<SemanaEjerciciosScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      // APPBAR CORREGIDO - usando AppBarComponents SIN DRAWER
+      // APPBAR 
       appBar: AppBar(
         backgroundColor: const Color(0xFF0984E3),
         elevation: 0,
@@ -215,11 +215,11 @@ class _SemanaEjerciciosScreenState extends State<SemanaEjerciciosScreen> {
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
-        // NO HAY IconButton de menú (las 3 rayitas)
+
       ),
       body: Column(
         children: [
-          _buildProgressBar(), // <-- AQUÍ SE LLAMA LA FUNCIÓN MODIFICADA
+          _buildProgressBar(), 
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
@@ -240,30 +240,26 @@ class _SemanaEjerciciosScreenState extends State<SemanaEjerciciosScreen> {
           ),
         ],
       ),
-      // BOTTOM NAVIGATION BAR CORREGIDO - usando AppBarComponents
+      // BOTTOM NAVIGATION BAR
       bottomNavigationBar: appbar_file.AppBarComponents.buildBottomNavBar(context, 1),
     );
   }
 
-  // --- FUNCIÓN MODIFICADA CON BORDE PLOMO MÁS CLARO Y FONDO BLANCO ---
   Widget _buildProgressBar() {
     final progress = _totalExercises > 0 
         ? _completedExercises / _totalExercises 
         : 0.0;
     
-    // El cálculo del progreso para el relleno
-    // Usamos LayoutBuilder para obtener el ancho disponible para la barra
     final progressFill = LayoutBuilder(
       builder: (context, constraints) {
-        // Ancho mínimo para que se vea el inicio de la barra
+
         final minWidth = progress > 0 ? 20.0 : 0.0;
-        // Ancho calculado basado en el progreso
+ 
         final calculatedWidth = constraints.maxWidth * progress;
         
         return Container(
           height: 14,
-          // Aseguramos que la barra tenga al menos minWidth si hay progreso, 
-          // pero no más que el ancho total
+
           width: calculatedWidth < minWidth ? minWidth : calculatedWidth,
           decoration: BoxDecoration(
             color: widget.isCompleted ? Colors.green : const Color(0xFFFDD835),
@@ -287,31 +283,30 @@ class _SemanaEjerciciosScreenState extends State<SemanaEjerciciosScreen> {
       ),
       child: Row(
         children: [
-          // 2. Barra de progreso y texto (se mantiene la lógica)
+          // 2. Barra de progreso
           Expanded(
             child: Stack(
               alignment: Alignment.center,
               children: [
-                // Fondo de la barra CON BORDE PLOMO CLARO Y FONDO BLANCO
+                // Fondo de la barra
                 Container(
                   height: 14,
                   decoration: BoxDecoration(
-                    color: Colors.white, // FONDO BLANCO
+                    color: Colors.white, 
                     borderRadius: BorderRadius.circular(10),
-                    border: Border.all( // BORDE PLOMO MÁS CLARO
-                      color: Colors.grey[400]!, // COLOR PLOMO MÁS CLARO
+                    border: Border.all( 
+                      color: Colors.grey[400]!,
                       width: 1.5,
                     ),
                   ),
                 ),
                 
-                // Barra de progreso con relleno (usando la lógica de arriba)
+                // Barra de progreso
                 Align(
                   alignment: Alignment.centerLeft,
-                  child: progressFill, // Usamos el widget de relleno
+                  child: progressFill, 
                 ),
-                
-                // Texto de progreso
+
                 Text(
                   '$_completedExercises/$_totalExercises',
                   style: const TextStyle(
@@ -328,10 +323,10 @@ class _SemanaEjerciciosScreenState extends State<SemanaEjerciciosScreen> {
           
           // 3. Icono final
           Icon(
-            Icons.emoji_events, // El ícono más parecido a una corona/premio
-            color: widget.isCompleted ? Colors.green : Colors.amber[700], // Color dorado
-            size: 32, // Un poco más grande para que coincida con el círculo
-            shadows: [ // Sombra sutil para que combine
+            Icons.emoji_events, 
+            color: widget.isCompleted ? Colors.green : Colors.amber[700], 
+            size: 32, 
+            shadows: [ 
               Shadow(
                 color: (widget.isCompleted ? Colors.green : Colors.amber[700]!).withAlpha(77),
                 blurRadius: 8,
@@ -343,21 +338,20 @@ class _SemanaEjerciciosScreenState extends State<SemanaEjerciciosScreen> {
       ),
     );
   }
-  // --- FIN DE LA FUNCIÓN MODIFICADA ---
 
   Widget _buildBottomSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        // Sección superior con llama y mensaje
+
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // IMAGEN DE LA LLAMA - MÁS ARRIBA
+            // IMAGEN DE LA LLAMA
             Expanded(
               flex: 2,
               child: Container(
-                height: 200, // REDUCIDA LA ALTURA
+                height: 200, 
                 alignment: Alignment.topCenter,
                 child: Image.asset(
                   'assets/images/llama.png',
@@ -388,7 +382,7 @@ class _SemanaEjerciciosScreenState extends State<SemanaEjerciciosScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // Card de motivación con texto centrado
+                  // Card de motivación
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
@@ -411,15 +405,15 @@ class _SemanaEjerciciosScreenState extends State<SemanaEjerciciosScreen> {
                         fontSize: 11,
                         height: 1.3,
                       ),
-                      textAlign: TextAlign.center, // TEXTO CENTRADO
+                      textAlign: TextAlign.center, 
                     ),
                   ),
                   
                   const SizedBox(height: 12),
                   
-                  // Card de puntaje centrado en la parte inferior del card de motivación
+                  // Card de puntaje
                   Align(
-                    alignment: Alignment.center, // CENTRADO HORIZONTALMENTE
+                    alignment: Alignment.center,
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                       decoration: BoxDecoration(
@@ -487,7 +481,7 @@ class ExerciseCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 16), // AUMENTADO DE 8 A 16 (más espacio entre cards)
+      margin: const EdgeInsets.only(bottom: 16), 
       child: Material(
         color: Colors.transparent,
         child: InkWell(

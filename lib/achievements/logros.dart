@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../widgets/appbar.dart' as appbar_file; // Para appBar y bottom navigation
-import '../widgets/menu.dart' as menu_file; // Para drawer
+import '../widgets/appbar.dart' as appbar_file; 
+import '../widgets/menu.dart' as menu_file; 
 
 class AchievementsScreen extends StatelessWidget {
   const AchievementsScreen({super.key});
@@ -10,16 +10,16 @@ class AchievementsScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
       
-      // APPBAR desde appbar.dart (CORREGIDO)
+      // APPBAR
       appBar: appbar_file.AppBarComponents.buildAppBar(context, 'Logros y Recompensas'),
       
-      // DRAWER desde menu.dart
+      // DRAWER 
       drawer: menu_file.MenuComponents.buildDrawer(context),
       
       // CONTENIDO
       body: const _AchievementsContent(),
       
-      // BOTTOM NAVIGATION desde appbar.dart
+      // BOTTOM NAVIGATION
       bottomNavigationBar: appbar_file.AppBarComponents.buildBottomNavBar(context, 2),
     );
   }

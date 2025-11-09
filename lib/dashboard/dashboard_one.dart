@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../widgets/appbar.dart' as appbar_file; // Para appBar y bottom navigation
-import '../widgets/menu.dart' as menu_file; // Para drawer
+import '../widgets/appbar.dart' as appbar_file; 
+import '../widgets/menu.dart' as menu_file;
 import '../achievements/logros.dart'; 
 import '../modules/modulos.dart'; 
 import '../widgets/estadisticas.dart'; 
@@ -20,10 +20,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       
-      // APPBAR desde appbar.dart (CORREGIDO)
+      // APPBAR 
       appBar: appbar_file.AppBarComponents.buildAppBar(context, 'Dashboard'),
       
-      // DRAWER desde menu.dart
+      // DRAWER 
       drawer: menu_file.MenuComponents.buildDrawer(context),
       
       // CONTENIDO PRINCIPAL
@@ -44,7 +44,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
       ),
       
-      // BOTTOM NAVIGATION BAR desde appbar.dart
+      // BOTTOM NAVIGATION BAR
       bottomNavigationBar: appbar_file.AppBarComponents.buildBottomNavBar(context, _currentIndex),
     );
   }

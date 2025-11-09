@@ -33,28 +33,28 @@ class HistoriaScreen extends StatefulWidget {
 }
 
 class _HistoriaScreenState extends State<HistoriaScreen> {
-  // Historia con posiciones alternadas
+  // Historia 
   final List<Map<String, dynamic>> _hitosCamino = [
     {
       'descripcion': 'Los egipcios también aplicaban álgebra, usando un método llamado falsa posición para encontrar valores desconocidos.',
       'imagen': 'assets/images/egiph.png',
       'posicion': Offset(0.05, 0.08),
       'color': Color(0xB3FFFFFF),
-      'lado': 'izquierda', // Primer card a la izquierda
+      'lado': 'izquierda', 
     },
     {
       'descripcion': 'En China, el libro "Los Nueve Capítulos" resolvía sistemas de ecuaciones con algo parecido a una matriz.',
       'imagen': 'assets/images/chinah.png',
       'posicion': Offset(0.05, 0.38),
       'color': Color(0xB3FFFFFF),
-      'lado': 'derecha', // Segundo card a la derecha
+      'lado': 'derecha', 
     },
     {
       'descripcion': 'En Europa, Descartes introdujo el uso de letras como x y y, y con él nació el álgebra moderna.',
       'imagen': 'assets/images/ecuacionh.png',
       'posicion': Offset(0.05, 0.68),
       'color': Color(0xB3FFFFFF),
-      'lado': 'izquierda', // Tercer card a la izquierda
+      'lado': 'izquierda',
     },
   ];
 
@@ -85,7 +85,7 @@ class _HistoriaScreenState extends State<HistoriaScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // SECCIÓN SUPERIOR CON LLAMA Y DOS CARDS
+            // SECCIÓN SUPERIOR
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
               child: SizedBox(
@@ -257,7 +257,7 @@ class _HistoriaScreenState extends State<HistoriaScreen> {
               height: 450,
               child: Stack(
                 children: [
-                  // IMAGEN DEL CAMINO DE FONDO
+                  // IMAGEN DEL CAMINO
                   Image.asset(
                     'assets/images/caminoh.png',
                     width: double.infinity,
@@ -309,7 +309,7 @@ class _HistoriaScreenState extends State<HistoriaScreen> {
               ),
             ),
 
-            // BOTÓN CONTINUAR - SIN FLECHA
+            // BOTÓN CONTINUAR 
             Container(
               margin: const EdgeInsets.only(top: 10, bottom: 10),
               child: GestureDetector(
@@ -335,7 +335,7 @@ class _HistoriaScreenState extends State<HistoriaScreen> {
                       ),
                     ],
                   ),
-                  child: const Center( // Cambiado de Row a Center
+                  child: const Center( 
                     child: Text(
                       'Continuar',
                       style: TextStyle(

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/appbar.dart' as appbar_file;
 import '../widgets/menu.dart' as menu_file;
-import '../achievements/logros.dart' as logros;
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -14,71 +13,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF74B9FF),
-      
-      // DRAWER USANDO COMPONENTE REUTILIZABLE CON ALIAS
+      backgroundColor: Colors.white,
+      appBar: appbar_file.AppBarComponents.buildAppBar(context, 'Mi Perfil'),
       drawer: menu_file.MenuComponents.buildDrawer(context),
-      
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF74B9FF),
-              Color(0xFF0984E3),
-            ],
-            stops: [0.0, 0.8],
-          ),
-        ),
-        child: Column(
-          children: [
-            // APPBAR USANDO COMPONENTE REUTILIZABLE (CORREGIDO)
-            appbar_file.AppBarComponents.buildAppBar(context, 'Mi Perfil'),
-            
-            Expanded(
-              child: FutureBuilder<ProfileData>(
-                future: _fetchProfileData(),
-                builder: (context, snapshot) {
-                  // Si está cargando, muestra la interfaz vacía pero sin loading
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return _buildEmptyProfile(); // Interfaz vacía temporal
-                  }
+      body: FutureBuilder<ProfileData>(
+        future: _fetchProfileData(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return _buildEmptyProfile(); 
+          }
 
-                  if (snapshot.hasError) {
-                    return _ProfileErrorState(error: snapshot.error.toString());
-                  }
+          if (snapshot.hasError) {
+            return _ProfileErrorState(error: snapshot.error.toString());
+          }
 
-                  final profileData = snapshot.data!;
-                  return SingleChildScrollView(
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                      children: [
-                        // IMAGEN PERFIL
-                        _ProfileImageSection(
-                          profileImage: profileData.profileImage,
-                          onEditPressed: _showEditProfileDialog,
-                        ),
-                        const SizedBox(height: 30),
-                        
-                        // CARD PRINCIPAL
-                        _MainCardSection(profileData: profileData),
-                      ],
-                    ),
-                  );
-                },
-              ),
+          final profileData = snapshot.data!;
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              children: [
+                _ProfileImageSection(
+                  profileImage: profileData.profileImage,
+                  onEditPressed: _showEditProfileDialog,
+                ),
+                const SizedBox(height: 30),
+                _MainCardSection(profileData: profileData),
+              ],
             ),
-          ],
-        ),
+          );
+        },
       ),
-      
-      // BOTTOM NAVIGATION BAR USANDO COMPONENTE REUTILIZABLE (CORREGIDO)
       bottomNavigationBar: appbar_file.AppBarComponents.buildBottomNavBar(context, 3),
     );
   }
 
-  // Interfaz vacía mientras carga (sin loading visible)
   Widget _buildEmptyProfile() {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
@@ -94,10 +62,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
               id: '',
               name: '',
               lastName: '',
+              email: '',
+              phone: '',
+              gender: '',
+              career: '',
               profileImage: '',
               joinDate: '',
               cycle: '',
-              rewards: [],
             ),
           ),
         ],
@@ -105,46 +76,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  // Simulación de llamada a API - Reemplazar con implementación real
   Future<ProfileData> _fetchProfileData() async {
-    // Simular delay de red MUY CORTO o usar datos en cache
     await Future.delayed(const Duration(milliseconds: 100));
     
-    // Datos de ejemplo - reemplazar con respuesta real de API
     return ProfileData(
       id: '7589654',
       name: 'Angela',
       lastName: 'Gatito',
+      email: 'angela.gatito@tecsup.edu.pe',
+      phone: '+51 987 654 321',
+      gender: 'Femenino',
+      career: 'Diseño y Desarrollo de Software',
       profileImage: 'assets/images/perfil.png',
       joinDate: 'junio de 2025',
       cycle: 'Sexto Ciclo',
-      rewards: [
-        ProfileReward(
-          id: '1',
-          emoji: '🥇',
-          title: 'Primer Lugar',
-          description: 'Matemáticas Avanzadas',
-          earnedAt: DateTime.now().subtract(const Duration(days: 5)),
-        ),
-        ProfileReward(
-          id: '2',
-          emoji: '⭐',
-          title: 'Estrella Semanal',
-          description: '10 lecciones completadas',
-          earnedAt: DateTime.now().subtract(const Duration(days: 2)),
-        ),
-        ProfileReward(
-          id: '3',
-          emoji: '🏆',
-          title: 'Campeón Álgebra',
-          description: 'Dominio total alcanzado',
-          earnedAt: DateTime.now().subtract(const Duration(days: 10)),
-        ),
-      ],
     );
   }
 
-  // DIÁLOGO EDITAR PERFIL
   void _showEditProfileDialog() {
     showDialog(
       context: context,
@@ -156,9 +104,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             
             return AlertDialog(
               backgroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
               title: const Text(
                 'Editar Perfil',
                 style: TextStyle(
@@ -174,9 +120,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       controller: TextEditingController(text: profileData?.name ?? ''),
                       decoration: InputDecoration(
                         labelText: 'Nombre',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -184,9 +128,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       controller: TextEditingController(text: profileData?.lastName ?? ''),
                       decoration: InputDecoration(
                         labelText: 'Apellidos',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: TextEditingController(text: profileData?.email ?? ''),
+                      decoration: InputDecoration(
+                        labelText: 'Email',
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: TextEditingController(text: profileData?.phone ?? ''),
+                      decoration: InputDecoration(
+                        labelText: 'Teléfono',
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: TextEditingController(text: profileData?.gender ?? ''),
+                      decoration: InputDecoration(
+                        labelText: 'Género',
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: TextEditingController(text: profileData?.career ?? ''),
+                      decoration: InputDecoration(
+                        labelText: 'Carrera',
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -194,9 +168,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       controller: TextEditingController(text: profileData?.cycle ?? ''),
                       decoration: InputDecoration(
                         labelText: 'Ciclo',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                       ),
                     ),
                   ],
@@ -226,7 +198,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  // Método para actualizar perfil - Implementar con API real
   void _updateProfile() {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
@@ -237,11 +208,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 }
 
-// ==========================================
-// COMPONENTES DE UI (ORIGINALES)
-// ==========================================
-
-// SECCIÓN IMAGEN PERFIL
 class _ProfileImageSection extends StatelessWidget {
   final String profileImage;
   final VoidCallback onEditPressed;
@@ -256,35 +222,23 @@ class _ProfileImageSection extends StatelessWidget {
     return Stack(
       alignment: Alignment.center,
       children: [
-        // Decoración
         Container(
           width: 180,
           height: 180,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            border: Border.all(
-              color: Colors.white,
-              width: 3,
-            ),
+            border: Border.all(color: const Color(0xFF0984E3), width: 3),
             boxShadow: const [
-              BoxShadow(
-                color: Color(0x33000000),
-                blurRadius: 10,
-                spreadRadius: 2,
-              ),
+              BoxShadow(color: Color(0x33000000), blurRadius: 10, spreadRadius: 2),
             ],
           ),
         ),
-        // Imagen
         Container(
           width: 160,
           height: 160,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            border: Border.all(
-              color: Colors.white,
-              width: 4,
-            ),
+            border: Border.all(color: const Color(0xFF0984E3), width: 4),
           ),
           child: ClipOval(
             child: Image.asset(
@@ -293,17 +247,12 @@ class _ProfileImageSection extends StatelessWidget {
               errorBuilder: (context, error, stackTrace) {
                 return Container(
                   color: Colors.grey[300],
-                  child: Icon(
-                    Icons.person,
-                    size: 60,
-                    color: Colors.grey[600],
-                  ),
+                  child: Icon(Icons.person, size: 60, color: Colors.grey[600]),
                 );
               },
             ),
           ),
         ),
-        // Botón editar
         Positioned(
           bottom: 5,
           child: GestureDetector(
@@ -312,24 +261,16 @@ class _ProfileImageSection extends StatelessWidget {
               width: 50,
               height: 25,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: const Color(0xFF0984E3),
                 borderRadius: const BorderRadius.only(
                   bottomLeft: Radius.circular(25),
                   bottomRight: Radius.circular(25),
                 ),
                 boxShadow: const [
-                  BoxShadow(
-                    color: Color(0x4D000000),
-                    blurRadius: 6,
-                    offset: Offset(0, 3),
-                  ),
+                  BoxShadow(color: Color(0x4D000000), blurRadius: 6, offset: Offset(0, 3)),
                 ],
               ),
-              child: const Icon(
-                Icons.edit,
-                color: Color(0xFF0984E3),
-                size: 16,
-              ),
+              child: const Icon(Icons.edit, color: Colors.white, size: 16),
             ),
           ),
         ),
@@ -338,7 +279,6 @@ class _ProfileImageSection extends StatelessWidget {
   }
 }
 
-// CARD PRINCIPAL
 class _MainCardSection extends StatelessWidget {
   final ProfileData profileData;
 
@@ -350,43 +290,22 @@ class _MainCardSection extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(25),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Color(0xFF74B9FF),
-            Color(0xFF0984E3),
-          ],
-          stops: [0.0, 0.8],
-        ),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: Colors.white,
-          width: 2,
-        ),
+        border: Border.all(color: const Color(0xFF0984E3), width: 2),
         boxShadow: const [
-          BoxShadow(
-            color: Color(0x1A000000),
-            blurRadius: 15,
-            offset: Offset(0, 5),
-          ),
+          BoxShadow(color: Color(0x1A000000), blurRadius: 15, offset: Offset(0, 5)),
         ],
       ),
       child: Column(
         children: [
-          // INFORMACIÓN
           _InfoSection(profileData: profileData),
-          const SizedBox(height: 25),
-          
-          // RECOMPENSAS
-          _RewardsSection(rewards: profileData.rewards),
         ],
       ),
     );
   }
 }
 
-// SECCIÓN INFORMACIÓN
 class _InfoSection extends StatelessWidget {
   final ProfileData profileData;
 
@@ -399,18 +318,14 @@ class _InfoSection extends StatelessWidget {
       children: [
         Row(
           children: [
-            const Icon(
-              Icons.person_outline,
-              color: Colors.white,
-              size: 22,
-            ),
+            const Icon(Icons.person_outline, color: Color(0xFF0984E3), size: 22),
             const SizedBox(width: 8),
             Text(
               'Información Personal',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: const Color(0xFF0984E3),
               ),
             ),
           ],
@@ -418,14 +333,17 @@ class _InfoSection extends StatelessWidget {
         const SizedBox(height: 20),
         _InfoRow(emoji: '👤', label: 'Nombre:', value: profileData.name),
         _InfoRow(emoji: '👥', label: 'Apellidos:', value: profileData.lastName),
+        _InfoRow(emoji: '📧', label: 'Email:', value: profileData.email),
+        _InfoRow(emoji: '📱', label: 'Teléfono:', value: profileData.phone),
+        _InfoRow(emoji: '⚧️', label: 'Género:', value: profileData.gender),
+        _InfoRow(emoji: '🎓', label: 'Carrera:', value: profileData.career),
         _InfoRow(emoji: '📅', label: 'Se unió en:', value: profileData.joinDate),
-        _InfoRow(emoji: '🎓', label: 'Ciclo:', value: profileData.cycle),
+        _InfoRow(emoji: '🔄', label: 'Ciclo:', value: profileData.cycle),
       ],
     );
   }
 }
 
-// FILA INFORMACIÓN
 class _InfoRow extends StatelessWidget {
   final String emoji;
   final String label;
@@ -444,31 +362,18 @@ class _InfoRow extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            width: 30,
-            child: Text(
-              emoji,
-              style: const TextStyle(fontSize: 16),
-            ),
-          ),
+          SizedBox(width: 30, child: Text(emoji, style: const TextStyle(fontSize: 16))),
           SizedBox(
             width: 100,
             child: Text(
               label,
-              style: const TextStyle(
-                fontWeight: FontWeight.w500,
-                color: Colors.white,
-              ),
+              style: const TextStyle(fontWeight: FontWeight.w500, color: Color(0xFF0984E3)),
             ),
           ),
           Expanded(
             child: Text(
               value,
-              style: const TextStyle(
-                fontSize: 16,
-                color: Colors.white,
-                fontWeight: FontWeight.w400,
-              ),
+              style: const TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.w400),
             ),
           ),
         ],
@@ -476,138 +381,6 @@ class _InfoRow extends StatelessWidget {
     );
   }
 }
-
-// SECCIÓN RECOMPENSAS
-class _RewardsSection extends StatelessWidget {
-  final List<ProfileReward> rewards;
-
-  const _RewardsSection({required this.rewards});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                Icon(
-                  Icons.card_giftcard,
-                  color: Colors.amber[100],
-                  size: 24,
-                ),
-                const SizedBox(width: 10),
-                const Text(
-                  'Mis Recompensas',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
-            ),
-            // Botón ver
-            SizedBox(
-              height: 35,
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const logros.AchievementsScreen()),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: const Color(0xFF0984E3),
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  elevation: 3,
-                ),
-                child: const Text(
-                  'Ver',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 15),
-        // Lista recompensas
-        Column(
-          children: rewards.map((reward) => Column(
-            children: [
-              _RewardItem(reward: reward),
-              const SizedBox(height: 10),
-            ],
-          )).toList(),
-        ),
-      ],
-    );
-  }
-}
-
-// ITEM RECOMPENSA
-class _RewardItem extends StatelessWidget {
-  final ProfileReward reward;
-
-  const _RewardItem({required this.reward});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: const Color(0x33FFFFFF),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0x4DFFFFFF)),
-      ),
-      child: Row(
-        children: [
-          Text(
-            reward.emoji,
-            style: const TextStyle(fontSize: 20),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  reward.title,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  reward.description,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: Color(0xCCFFFFFF),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// ==========================================
-// ESTADO DE ERROR (EXISTENTE)
-// ==========================================
 
 class _ProfileErrorState extends StatelessWidget {
   final String error;
@@ -620,11 +393,11 @@ class _ProfileErrorState extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.error_outline, size: 64, color: Colors.white),
+          const Icon(Icons.error_outline, size: 64, color: Color(0xFF0984E3)),
           const SizedBox(height: 16),
           const Text(
             'Error al cargar el perfil',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF0984E3)),
           ),
           const SizedBox(height: 8),
           Padding(
@@ -632,17 +405,15 @@ class _ProfileErrorState extends StatelessWidget {
             child: Text(
               error,
               textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 14, color: Colors.white70),
+              style: const TextStyle(fontSize: 14, color: Colors.grey),
             ),
           ),
           const SizedBox(height: 20),
           ElevatedButton(
-            onPressed: () {
-              // Aquí puedes agregar lógica para reintentar
-            },
+            onPressed: () {},
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.white,
-              foregroundColor: const Color(0xFF0984E3),
+              backgroundColor: const Color(0xFF0984E3),
+              foregroundColor: Colors.white,
             ),
             child: const Text('Reintentar'),
           ),
@@ -652,42 +423,28 @@ class _ProfileErrorState extends StatelessWidget {
   }
 }
 
-// ==========================================
-// MODELOS DE DATOS PARA API (EXISTENTES)
-// ==========================================
-
 class ProfileData {
   final String id;
   final String name;
   final String lastName;
+  final String email;
+  final String phone;
+  final String gender;
+  final String career;
   final String profileImage;
   final String joinDate;
   final String cycle;
-  final List<ProfileReward> rewards;
 
   ProfileData({
     required this.id,
     required this.name,
     required this.lastName,
+    required this.email,
+    required this.phone,
+    required this.gender,
+    required this.career,
     required this.profileImage,
     required this.joinDate,
     required this.cycle,
-    required this.rewards,
-  });
-}
-
-class ProfileReward {
-  final String id;
-  final String emoji;
-  final String title;
-  final String description;
-  final DateTime earnedAt;
-
-  ProfileReward({
-    required this.id,
-    required this.emoji,
-    required this.title,
-    required this.description,
-    required this.earnedAt,
   });
 }

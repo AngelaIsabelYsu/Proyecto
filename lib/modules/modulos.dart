@@ -72,7 +72,7 @@ class _ModuloScreenState extends State<ModuloScreen> {
           onPressed: () => _navigateToTemario('calculus'),
         ),
         const SizedBox(height: 16),
-        // Módulo 2: Aplicaciones...
+        // Módulo 2: Aplicaciones
         _buildCourseButton(
           title: 'Aplicaciones de\nCálculo y Estadística',
           backgroundColor: const Color(0xFF4CAF50), 

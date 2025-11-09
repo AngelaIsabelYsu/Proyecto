@@ -101,7 +101,7 @@ class _EjerciciosCompletosScreenState extends State<EjerciciosCompletosScreen> {
                 
                 const SizedBox(width: 30),
                 
-                // MASCOTA (LLAMA)
+                // LLAMA
                 Image.asset(
                   'assets/images/llama.png',
                   width: 140,

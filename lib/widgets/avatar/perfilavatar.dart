@@ -44,9 +44,7 @@ class _AvatarDetailScreenState extends State<AvatarDetailScreen> {
       _isEquipped = !_isEquipped;
     });
 
-    if (widget.onEquippedChanged != null) {
-      widget.onEquippedChanged!(_isEquipped);
-    }
+    widget.onEquippedChanged?.call(_isEquipped);
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -78,20 +76,14 @@ class _AvatarDetailScreenState extends State<AvatarDetailScreen> {
       _currentAuthorName = newName;
     });
     
-    if (widget.onNameChanged != null) {
-      widget.onNameChanged!(newName);
-    }
+    widget.onNameChanged?.call(newName);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      
-      // APPBAR PERSONALIZADO - SIN RESALTADO
       appBar: appbar_file.AppBarComponents.buildAppBar(context, 'Avatar'),
-
-      // BOTTOM NAVIGATION BAR PERSONALIZADO - SIN RESALTADO
       bottomNavigationBar: appbar_file.AppBarComponents.buildBottomNavBar(context, 0, noHighlight: true),
       
       body: SingleChildScrollView(
@@ -102,7 +94,7 @@ class _AvatarDetailScreenState extends State<AvatarDetailScreen> {
               backgroundColor: widget.backgroundColor,
             ),
             
-            const SizedBox(height: 20),
+            const SizedBox(height: 30),
             
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -113,20 +105,20 @@ class _AvatarDetailScreenState extends State<AvatarDetailScreen> {
                     onNameChanged: _changeAuthorName,
                   ),
                   
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 20),
                   
                   ChangeNameButton(
                     onNameChanged: _changeAuthorName,
                     currentName: _currentAuthorName,
                   ),
                   
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 20),
                   
                   DescriptionSection(
                     description: widget.description,
                   ),
                   
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 25),
                   
                   Row(
                     children: [
@@ -136,7 +128,7 @@ class _AvatarDetailScreenState extends State<AvatarDetailScreen> {
                         ),
                       ),
                       
-                      const SizedBox(width: 12),
+                      const SizedBox(width: 15),
                       
                       Expanded(
                         child: EquipButton(
@@ -147,7 +139,7 @@ class _AvatarDetailScreenState extends State<AvatarDetailScreen> {
                     ],
                   ),
                   
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 25),
                 ],
               ),
             ),
@@ -174,7 +166,7 @@ class AvatarSection extends StatelessWidget {
       children: [
         Container(
           width: double.infinity,
-          height: 260,
+          height: 320,
           decoration: BoxDecoration(
             color: backgroundColor,
             borderRadius: const BorderRadius.only(
@@ -184,7 +176,7 @@ class AvatarSection extends StatelessWidget {
           ),
           child: Column(
             children: [
-              const SizedBox(height: 16),
+              const SizedBox(height: 20),
               
               Align(
                 alignment: Alignment.centerLeft,
@@ -192,7 +184,7 @@ class AvatarSection extends StatelessWidget {
                   children: [
                     const Spacer(),
                     Container(
-                      margin: const EdgeInsets.only(right: 20),
+                      margin: const EdgeInsets.only(right: 20, top: 10),
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       decoration: BoxDecoration(
                         color: Colors.white.withAlpha(179),
@@ -211,23 +203,27 @@ class AvatarSection extends StatelessWidget {
                 ),
               ),
               
-              const SizedBox(height: 8),
+              const SizedBox(height: 10),
               
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  child: Image.asset(
-                    imagePath,
-                    fit: BoxFit.contain,
-                    filterQuality: FilterQuality.high,
-                    isAntiAlias: true,
-                    errorBuilder: (context, error, stackTrace) {
-                      return const Icon(
-                        Icons.pets,
-                        size: 100,
-                        color: Colors.white,
-                      );
-                    },
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+                  child: SizedBox(
+                    width: 280,
+                    height: 280,
+                    child: Image.asset(
+                      imagePath,
+                      fit: BoxFit.contain,
+                      filterQuality: FilterQuality.high,
+                      isAntiAlias: true,
+                      errorBuilder: (context, error, stackTrace) {
+                        return const Icon(
+                          Icons.pets,
+                          size: 120,
+                          color: Colors.white,
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),
@@ -332,7 +328,7 @@ class ChangeNameButton extends StatelessWidget {
       borderRadius: BorderRadius.circular(12),
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         decoration: BoxDecoration(
           color: Colors.grey[100],
           borderRadius: BorderRadius.circular(12),
@@ -346,7 +342,7 @@ class ChangeNameButton extends StatelessWidget {
             Text(
               'Cambiar de nombre',
               style: TextStyle(
-                fontSize: 15,
+                fontSize: 16,
                 color: Colors.grey[700],
                 fontWeight: FontWeight.w500,
               ),
@@ -459,7 +455,7 @@ class DescriptionSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         color: Colors.grey[50],
         borderRadius: BorderRadius.circular(16),
@@ -468,7 +464,7 @@ class DescriptionSection extends StatelessWidget {
       child: Text(
         description,
         style: TextStyle(
-          fontSize: 14,
+          fontSize: 15,
           color: Colors.grey[800],
           height: 1.5,
         ),
@@ -494,7 +490,7 @@ class StoreButton extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(16),
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 16),
+          padding: const EdgeInsets.symmetric(vertical: 18),
           decoration: BoxDecoration(
             color: const Color(0xFFE3F2FD),
             borderRadius: BorderRadius.circular(16),
@@ -506,7 +502,7 @@ class StoreButton extends StatelessWidget {
           child: const Icon(
             Icons.checkroom,
             color: Color(0xFF0984E3),
-            size: 28,
+            size: 30,
           ),
         ),
       ),
@@ -556,14 +552,14 @@ class EquipButton extends StatelessWidget {
           onTap: onTap,
           borderRadius: BorderRadius.circular(16),
           child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 16),
+            padding: const EdgeInsets.symmetric(vertical: 18),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
                   isEquipped ? 'Usando' : 'Equipar',
                   style: const TextStyle(
-                    fontSize: 16,
+                    fontSize: 17,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),

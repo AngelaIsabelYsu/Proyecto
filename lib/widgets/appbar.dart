@@ -5,6 +5,7 @@ import '../achievements/logros.dart';
 import '../profile/perfil.dart';
 
 class AppBarComponents {
+  // AppBar con menú de 3 rayitas
   static AppBar buildAppBar(BuildContext context, String title) {
     return AppBar(
       backgroundColor: Colors.transparent,
@@ -22,10 +23,42 @@ class AppBarComponents {
           ),
         ),
       ),
+      title: Text(
+        title,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      centerTitle: true,
       leading: Builder(
         builder: (context) => IconButton(
           icon: const Icon(Icons.menu, color: Colors.white),
-          onPressed: () => Scaffold.of(context).openDrawer(),
+          onPressed: () {
+            Scaffold.of(context).openDrawer();
+          },
+        ),
+      ),
+    );
+  }
+
+  // AppBar con flecha de retroceso
+  static AppBar buildBackAppBar(BuildContext context, String title) {
+    return AppBar(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      flexibleSpace: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFF74B9FF),
+              Color(0xFF0984E3),
+            ],
+            stops: [0.0, 0.8],
+          ),
         ),
       ),
       title: Text(
@@ -37,9 +70,16 @@ class AppBarComponents {
         ),
       ),
       centerTitle: true,
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back, color: Colors.white),
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+      ),
     );
   }
 
+  // AppBar simple (sin leading icon - para mantener compatibilidad)
   static AppBar buildSimpleAppBar(BuildContext context, String title) {
     return AppBar(
       title: Text(
@@ -54,10 +94,6 @@ class AppBarComponents {
       backgroundColor: const Color(0xFF42A5F5),
       elevation: 0,
       iconTheme: const IconThemeData(color: Colors.white),
-      leading: IconButton(
-        icon: const Icon(Icons.menu),
-        onPressed: () => Scaffold.of(context).openDrawer(),
-      ),
     );
   }
 
@@ -75,9 +111,7 @@ class AppBarComponents {
         ),
       ),
       child: BottomNavigationBar(
-        // CORRECCIÓN: NUNCA usar -1, usar currentIndex pero cambiar colores
         currentIndex: noHighlight ? 0 : currentIndex,
-        // CORRECCIÓN: Cuando noHighlight es true, ambos colores son iguales
         selectedItemColor: noHighlight ? const Color(0xB3FFFFFF) : Colors.white,
         unselectedItemColor: const Color(0xB3FFFFFF),
         backgroundColor: Colors.transparent,

@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import '../../widgets/appbar.dart' as appbar_file;
 
 class TiendaDelAvatar extends StatefulWidget {
-  final String animalType; // 'hipopotamo', 'leon', 'conejo'
+  final String animalType;
   final String animalImage;
   final String animalName;
   final Color backgroundColor;
 
   const TiendaDelAvatar({
     super.key,
-    this.animalType = 'hipopotamo', // Valor por defecto
-    this.animalImage = 'assets/images/ahipopotamo.png', // Valor por defecto
-    this.animalName = 'Hipopótamo', // Valor por defecto
-    this.backgroundColor = const Color(0xFFFFC1CC), // Valor por defecto
+    this.animalType = 'hipopotamo',
+    this.animalImage = 'assets/images/ahipopotamo.png',
+    this.animalName = 'Hipopótamo',
+    this.backgroundColor = const Color(0xFFFFC1CC),
   });
 
   @override
@@ -20,47 +20,44 @@ class TiendaDelAvatar extends StatefulWidget {
 }
 
 class _TiendaDelAvatarState extends State<TiendaDelAvatar> {
-  // Variable para guardar qué polo está seleccionado
-  int _poloSeleccionado = 0; // 0 significa ninguno seleccionado
+  int _poloSeleccionado = 0;
 
-  // Lista de imágenes de avatar según el tipo de animal
   List<String> get _avatarImages {
     switch (widget.animalType) {
       case 'leon':
         return [
-          'assets/images/aleon.png', // Polo 0 (ninguno)
-          'assets/images/lcp1.png', // Polo 1
-          'assets/images/lcp2.png', // Polo 2
-          'assets/images/lcpo3.png', // Polo 3
-          'assets/images/lcp4.png', // Polo 4
-          'assets/images/lcp5.png', // Polo 5
-          'assets/images/lcp6.png', // Polo 6
+          'assets/images/aleon.png',
+          'assets/images/lcp1.png',
+          'assets/images/lcp2.png',
+          'assets/images/lcpo3.png',
+          'assets/images/lcp4.png',
+          'assets/images/lcp5.png',
+          'assets/images/lcp6.png',
         ];
       case 'conejo':
         return [
-          'assets/images/aconejo.png', // Polo 0 (ninguno)
-          'assets/images/ccp1.png', // Polo 1
-          'assets/images/ccp2.png', // Polo 2
-          'assets/images/ccp3.png', // Polo 3
-          'assets/images/ccp4.png', // Polo 4
-          'assets/images/ccp5.png', // Polo 5
-          'assets/images/ccp6.png', // Polo 6
+          'assets/images/aconejo.png',
+          'assets/images/ccp1.png',
+          'assets/images/ccp2.png',
+          'assets/images/ccp3.png',
+          'assets/images/ccp4.png',
+          'assets/images/ccp5.png',
+          'assets/images/ccp6.png',
         ];
       case 'hipopotamo':
       default:
         return [
-          'assets/images/ahipopotamo.png', // Polo 0 (ninguno)
-          'assets/images/hcp1.png', // Polo 1
-          'assets/images/hcp2.png', // Polo 2
-          'assets/images/hcp3.png', // Polo 3
-          'assets/images/hcp4.png', // Polo 4
-          'assets/images/hcp5.png', // Polo 5
-          'assets/images/hcp6.png', // Polo 6
+          'assets/images/ahipopotamo.png',
+          'assets/images/hcp1.png',
+          'assets/images/hcp2.png',
+          'assets/images/hcp3.png',
+          'assets/images/hcp4.png',
+          'assets/images/hcp5.png',
+          'assets/images/hcp6.png',
         ];
     }
   }
 
-  // Precios de los polos según el animal
   Map<int, int> get _preciosPolos {
     switch (widget.animalType) {
       case 'leon':
@@ -97,16 +94,16 @@ class _TiendaDelAvatarState extends State<TiendaDelAvatar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // APPBAR PERSONALIZADO
+      // APPBAR
       appBar: appbar_file.AppBarComponents.buildAppBar(context, 'Tienda - ${widget.animalName}'),
 
-      // BOTTOM NAVIGATION BAR PERSONALIZADO - SIN RESALTADO
+      // NAVEGACIÓN INFERIOR
       bottomNavigationBar: appbar_file.AppBarComponents.buildBottomNavBar(context, 0, noHighlight: true),
       
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Avatar section
+            // SECCIÓN AVATAR
             Container(
               width: double.infinity,
               decoration: BoxDecoration(
@@ -159,7 +156,7 @@ class _TiendaDelAvatarState extends State<TiendaDelAvatar> {
               ),
             ),
             
-            // Ropa section
+            // SECCIÓN ROPA
             Container(
               color: Colors.white,
               padding: const EdgeInsets.only(top: 10),
@@ -194,7 +191,7 @@ class _TiendaDelAvatarState extends State<TiendaDelAvatar> {
                     ],
                   ),
                   
-                  // Volver button
+                  // BOTÓN VOLVER
                   Padding(
                     padding: const EdgeInsets.only(top: 20, left: 16, right: 16, bottom: 10),
                     child: SizedBox(
@@ -232,6 +229,7 @@ class _TiendaDelAvatarState extends State<TiendaDelAvatar> {
     );
   }
 
+  // TARJETA DE PRENDA
   Widget _buildClothingItem(String imagePath, int price, int numeroPolo) {
     bool estaSeleccionado = _poloSeleccionado == numeroPolo;
     
