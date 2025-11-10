@@ -205,7 +205,7 @@ class _SemanaEjerciciosScreenState extends State<SemanaEjerciciosScreen> {
           _buildProgressBar(), 
           Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               child: Column(
                 children: [
                   ..._exercises.map((exercise) => ExerciseCard(
@@ -214,9 +214,8 @@ class _SemanaEjerciciosScreenState extends State<SemanaEjerciciosScreen> {
                         isCompletedVersion: widget.isCompleted,
                       )),
                   
-                  const SizedBox(height: 20), 
+                  const SizedBox(height: 12), 
                   _buildBottomSection(),
-                  const SizedBox(height: 20), 
                 ],
               ),
             ),
@@ -272,7 +271,7 @@ class _SemanaEjerciciosScreenState extends State<SemanaEjerciciosScreen> {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
-                      color: Colors.grey[400]!,
+                      color: const Color(0xFF0984E3),
                       width: 1.5,
                     ),
                   ),
@@ -301,13 +300,6 @@ class _SemanaEjerciciosScreenState extends State<SemanaEjerciciosScreen> {
             Icons.emoji_events, 
             color: widget.isCompleted ? Colors.green : Colors.amber[700], 
             size: 32,
-            shadows: [ 
-              Shadow(
-                color: (widget.isCompleted ? Colors.green : Colors.amber[700]!).withAlpha(77),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              )
-            ],
           ),
         ],
       ),
@@ -315,44 +307,39 @@ class _SemanaEjerciciosScreenState extends State<SemanaEjerciciosScreen> {
   }
 
   Widget _buildBottomSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              flex: 2,
-              child: Container(
-                height: 200,
-                alignment: Alignment.topCenter,
-                child: Image.asset(
-                  'assets/images/llama.png',
-                  height: 200,
-                  fit: BoxFit.contain,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      height: 200,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFFFEAA7),
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Icon(
-                        Icons.emoji_emotions,
-                        color: widget.isCompleted ? Colors.green : const Color(0xFFE17055),
-                        size: 60,
-                      ),
-                    );
-                  },
-                ),
-              ),
+    return Container(
+      margin: const EdgeInsets.only(top: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 220,
+            height: 220,
+            child: Image.asset(
+              'assets/images/llama.png',
+              fit: BoxFit.contain,
+              errorBuilder: (context, error, stackTrace) {
+                return Container(
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFFEAA7),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Icon(
+                    Icons.emoji_emotions,
+                    color: widget.isCompleted ? Colors.green : const Color(0xFFE17055),
+                    size: 90,
+                  ),
+                );
+              },
             ),
-            
-            const SizedBox(width: 8),
-            
-            Expanded(
-              flex: 3,
+          ),
+          
+          Expanded(
+            child: Container(
+              margin: const EdgeInsets.only(left: 0),
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Container(
@@ -363,8 +350,8 @@ class _SemanaEjerciciosScreenState extends State<SemanaEjerciciosScreen> {
                       boxShadow: [
                         BoxShadow(
                           color: (widget.isCompleted ? Colors.green : const Color(0xFFE53935)).withAlpha(102),
-                          blurRadius: 12,
-                          offset: const Offset(0, 4),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
                         ),
                       ],
                     ),
@@ -375,63 +362,60 @@ class _SemanaEjerciciosScreenState extends State<SemanaEjerciciosScreen> {
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 11,
-                        height: 1.3,
+                        height: 1.2,
                       ),
                       textAlign: TextAlign.center,
                     ),
                   ),
                   
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 4),
                   
-                  Align(
-                    alignment: Alignment.center,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: widget.isCompleted ? Colors.green : const Color(0xFF0984E3),
-                          width: 2,
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: widget.isCompleted ? Colors.green : const Color(0xFF0984E3),
+                        width: 2,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withAlpha(20),
+                          blurRadius: 6,
+                          offset: const Offset(0, 2),
                         ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withAlpha(26),
-                            blurRadius: 8,
-                            offset: const Offset(0, 2),
+                      ],
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text(
+                          'Puntaje actual:',
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w500,
                           ),
-                        ],
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Text(
-                            'Puntaje actual:',
-                            style: TextStyle(
-                              fontSize: 10,
-                              color: Colors.grey,
-                              fontWeight: FontWeight.w500,
-                            ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          '0/20',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: widget.isCompleted ? Colors.green : const Color(0xFF0984E3),
                           ),
-                          const SizedBox(height: 4),
-                          Text(
-                            '0/20',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: widget.isCompleted ? Colors.green : const Color(0xFF0984E3),
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
             ),
-          ],
-        ),
-      ],
+          ),
+        ],
+      ),
     );
   }
 }
@@ -451,7 +435,7 @@ class ExerciseCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
+      margin: const EdgeInsets.only(bottom: 12),
       child: Material(
         color: Colors.transparent,
         child: InkWell(

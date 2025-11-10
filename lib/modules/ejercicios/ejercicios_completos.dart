@@ -11,11 +11,11 @@ class EjerciciosCompletosScreen extends StatefulWidget {
 }
 
 class _EjerciciosCompletosScreenState extends State<EjerciciosCompletosScreen> {
-  final int puntajeActual = 20;
   final int puntajeMaximo = 20;
+  int get puntajeActual => _ejercicios.where((e) => e['completado'] == true).length * 5;
 
   final List<Map<String, dynamic>> _ejercicios = [
-    {'numero': 1, 'titulo': 'Pregunta', 'completado': true},
+    {'numero': 1, 'titulo': 'Ejercicio', 'completado': true},
     {'numero': 2, 'titulo': 'Ejercicio', 'completado': true},
     {'numero': 3, 'titulo': 'Ejercicio', 'completado': true},
     {'numero': 4, 'titulo': 'Ejercicio', 'completado': true},
@@ -52,10 +52,10 @@ class _EjerciciosCompletosScreenState extends State<EjerciciosCompletosScreen> {
       ),
       
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            const SizedBox(height: 20),
+            const SizedBox(height: 5),
             
             // PUNTAJE Y MASCOTA
             Row(
@@ -64,7 +64,7 @@ class _EjerciciosCompletosScreenState extends State<EjerciciosCompletosScreen> {
               children: [
                 // PUNTAJE
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(16),
@@ -99,19 +99,19 @@ class _EjerciciosCompletosScreenState extends State<EjerciciosCompletosScreen> {
                   ),
                 ),
                 
-                const SizedBox(width: 30),
+                const SizedBox(width: 10),
                 
-                // LLAMA
+                // LLAMA 
                 Image.asset(
                   'assets/images/llama.png',
-                  width: 140,
-                  height: 140,
+                  width: 200,
+                  height: 200,
                   filterQuality: FilterQuality.high,
                   isAntiAlias: true,
                   errorBuilder: (context, error, stackTrace) {
                     return Container(
-                      width: 140,
-                      height: 140,
+                      width: 160,
+                      height: 160,
                       decoration: BoxDecoration(
                         color: Colors.orange[100],
                         borderRadius: BorderRadius.circular(12),
@@ -127,7 +127,7 @@ class _EjerciciosCompletosScreenState extends State<EjerciciosCompletosScreen> {
               ],
             ),
             
-            const SizedBox(height: 30),
+            const SizedBox(height: 15),
             
             // LISTA DE EJERCICIOS
             ListView.builder(
@@ -137,8 +137,8 @@ class _EjerciciosCompletosScreenState extends State<EjerciciosCompletosScreen> {
               itemBuilder: (context, index) {
                 final ejercicio = _ejercicios[index];
                 return Container(
-                  margin: const EdgeInsets.only(bottom: 16),
-                  padding: const EdgeInsets.all(20),
+                  margin: const EdgeInsets.only(bottom: 10),
+                  padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     color: const Color(0xFFFFEB3B),
                     borderRadius: BorderRadius.circular(16),
@@ -159,7 +159,7 @@ class _EjerciciosCompletosScreenState extends State<EjerciciosCompletosScreen> {
                             Text(
                               '${ejercicio['titulo']} Nº ${ejercicio['numero']}',
                               style: const TextStyle(
-                                fontSize: 18,
+                                fontSize: 16,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black87,
                               ),
@@ -168,7 +168,7 @@ class _EjerciciosCompletosScreenState extends State<EjerciciosCompletosScreen> {
                             const Text(
                               'Completo',
                               style: TextStyle(
-                                fontSize: 13,
+                                fontSize: 12,
                                 color: Colors.black54,
                               ),
                             ),
@@ -176,7 +176,7 @@ class _EjerciciosCompletosScreenState extends State<EjerciciosCompletosScreen> {
                         ),
                       ),
                       Container(
-                        padding: const EdgeInsets.all(8),
+                        padding: const EdgeInsets.all(6),
                         decoration: const BoxDecoration(
                           color: Color(0xFF4DD0E1),
                           shape: BoxShape.circle,
@@ -184,7 +184,7 @@ class _EjerciciosCompletosScreenState extends State<EjerciciosCompletosScreen> {
                         child: const Icon(
                           Icons.check,
                           color: Colors.white,
-                          size: 22,
+                          size: 18,
                         ),
                       ),
                     ],
@@ -193,9 +193,9 @@ class _EjerciciosCompletosScreenState extends State<EjerciciosCompletosScreen> {
               },
             ),
             
-            const SizedBox(height: 20),
+            const SizedBox(height: 12),
             
-            // BOTONES EN FILA
+            // BOTONES EN FILA 
             Row(
               children: [
                 // BOTÓN VER PUNTUACIÓN
@@ -204,9 +204,9 @@ class _EjerciciosCompletosScreenState extends State<EjerciciosCompletosScreen> {
                     onPressed: _verPuntuacion,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFDC143C),
-                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25),
+                        borderRadius: BorderRadius.circular(20),
                       ),
                       elevation: 3,
                     ),
@@ -214,14 +214,14 @@ class _EjerciciosCompletosScreenState extends State<EjerciciosCompletosScreen> {
                       'Ver puntuación',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 16,
+                        fontSize: 14,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
                 ),
                 
-                const SizedBox(width: 12),
+                const SizedBox(width: 10),
                 
                 // BOTÓN CONSEJO DE IA
                 Expanded(
@@ -229,9 +229,9 @@ class _EjerciciosCompletosScreenState extends State<EjerciciosCompletosScreen> {
                     onPressed: _verConsejoIA,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFDC143C),
-                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25),
+                        borderRadius: BorderRadius.circular(20),
                       ),
                       elevation: 3,
                     ),
@@ -239,7 +239,7 @@ class _EjerciciosCompletosScreenState extends State<EjerciciosCompletosScreen> {
                       'Consejo de IA',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 16,
+                        fontSize: 14,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -248,7 +248,7 @@ class _EjerciciosCompletosScreenState extends State<EjerciciosCompletosScreen> {
               ],
             ),
             
-            const SizedBox(height: 40),
+            const SizedBox(height: 10),
           ],
         ),
       ),

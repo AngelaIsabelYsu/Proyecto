@@ -71,22 +71,22 @@ class _TiendaDelAvatarState extends State<TiendaDelAvatar> {
         };
       case 'conejo':
         return {
-          1: 780,
-          2: 480,
-          3: 630,
-          4: 880,
-          5: 680,
-          6: 250,
+          1: 850,
+          2: 550,
+          3: 700,
+          4: 900,
+          5: 750,
+          6: 300,
         };
       case 'hipopotamo':
       default:
         return {
-          1: 800,
-          2: 500,
-          3: 650,
-          4: 820,
-          5: 705,
-          6: 205,
+          1: 850,
+          2: 550,
+          3: 700,
+          4: 900,
+          5: 750,
+          6: 300,
         };
     }
   }
@@ -95,7 +95,7 @@ class _TiendaDelAvatarState extends State<TiendaDelAvatar> {
   Widget build(BuildContext context) {
     return Scaffold(
       // APPBAR
-      appBar: appbar_file.AppBarComponents.buildAppBar(context, 'Tienda - ${widget.animalName}'),
+      appBar: appbar_file.AppBarComponents.buildAppBar(context, 'Tienda'),
 
       // NAVEGACIÓN INFERIOR
       bottomNavigationBar: appbar_file.AppBarComponents.buildBottomNavBar(context, 0, noHighlight: true),
@@ -118,15 +118,15 @@ class _TiendaDelAvatarState extends State<TiendaDelAvatar> {
                 children: [
                   const SizedBox(height: 10),
                   SizedBox(
-                    width: 160, // Reducido de 200 a 160 (menos ancho)
-                    height: 220, // Aumentado de 200 a 220 (más alto)
+                    width: 160, 
+                    height: 220, 
                     child: Image.asset(
                       _avatarImages[_poloSeleccionado],
                       fit: BoxFit.contain,
                       filterQuality: FilterQuality.high,
                       isAntiAlias: true,
-                      cacheWidth: 320, // Ajustado proporcionalmente
-                      cacheHeight: 440, // Ajustado proporcionalmente
+                      cacheWidth: 320, 
+                      cacheHeight: 440, 
                       errorBuilder: (context, error, stackTrace) {
                         return Container(
                           color: const Color(0x33FFFFFF),
@@ -273,7 +273,7 @@ class _TiendaDelAvatarState extends State<TiendaDelAvatar> {
                     fit: BoxFit.contain,
                     filterQuality: FilterQuality.high,
                     isAntiAlias: true,
-                    cacheWidth: 180, // Reducido para mantener proporción
+                    cacheWidth: 180,
                     cacheHeight: 180,
                     errorBuilder: (context, error, stackTrace) {
                       return Container(
@@ -325,10 +325,12 @@ class _TiendaDelAvatarState extends State<TiendaDelAvatar> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                Icons.favorite,
-                color: estaSeleccionado ? const Color(0xFF4CAF50) : const Color(0xFF42A5F5),
-                size: 16,
+              Text(
+                '💎',  // ✅ Gema en lugar de corazón
+                style: TextStyle(
+                  fontSize: 16,
+                  color: estaSeleccionado ? const Color(0xFF4CAF50) : const Color(0xFF42A5F5),
+                ),
               ),
               const SizedBox(width: 4),
               Text(
