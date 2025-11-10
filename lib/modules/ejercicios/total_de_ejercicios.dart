@@ -36,8 +36,6 @@ class ExerciseItem {
   });
 }
 
-// PANTALLA PRINCIPAL
-
 class SemanaEjerciciosScreen extends StatefulWidget {
   final String weekTitle;
   final int weekNumber;
@@ -198,24 +196,9 @@ class _SemanaEjerciciosScreenState extends State<SemanaEjerciciosScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      // APPBAR 
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF0984E3),
-        elevation: 0,
-        centerTitle: true,
-        title: Text(
-          widget.isCompleted ? '${widget.weekTitle} - Completado!' : widget.weekTitle,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
-        ),
-
+      appBar: appbar_file.AppBarComponents.buildBackAppBar(
+        context, 
+        widget.isCompleted ? '${widget.weekTitle} - Completado!' : widget.weekTitle
       ),
       body: Column(
         children: [
@@ -240,7 +223,6 @@ class _SemanaEjerciciosScreenState extends State<SemanaEjerciciosScreen> {
           ),
         ],
       ),
-      // BOTTOM NAVIGATION BAR
       bottomNavigationBar: appbar_file.AppBarComponents.buildBottomNavBar(context, 1),
     );
   }
@@ -252,14 +234,11 @@ class _SemanaEjerciciosScreenState extends State<SemanaEjerciciosScreen> {
     
     final progressFill = LayoutBuilder(
       builder: (context, constraints) {
-
         final minWidth = progress > 0 ? 20.0 : 0.0;
- 
         final calculatedWidth = constraints.maxWidth * progress;
         
         return Container(
           height: 14,
-
           width: calculatedWidth < minWidth ? minWidth : calculatedWidth,
           decoration: BoxDecoration(
             color: widget.isCompleted ? Colors.green : const Color(0xFFFDD835),
@@ -283,28 +262,25 @@ class _SemanaEjerciciosScreenState extends State<SemanaEjerciciosScreen> {
       ),
       child: Row(
         children: [
-          // 2. Barra de progreso
           Expanded(
             child: Stack(
               alignment: Alignment.center,
               children: [
-                // Fondo de la barra
                 Container(
                   height: 14,
                   decoration: BoxDecoration(
-                    color: Colors.white, 
+                    color: Colors.white,
                     borderRadius: BorderRadius.circular(10),
-                    border: Border.all( 
+                    border: Border.all(
                       color: Colors.grey[400]!,
                       width: 1.5,
                     ),
                   ),
                 ),
                 
-                // Barra de progreso
                 Align(
                   alignment: Alignment.centerLeft,
-                  child: progressFill, 
+                  child: progressFill,
                 ),
 
                 Text(
@@ -321,11 +297,10 @@ class _SemanaEjerciciosScreenState extends State<SemanaEjerciciosScreen> {
           
           const SizedBox(width: 12),
           
-          // 3. Icono final
           Icon(
             Icons.emoji_events, 
             color: widget.isCompleted ? Colors.green : Colors.amber[700], 
-            size: 32, 
+            size: 32,
             shadows: [ 
               Shadow(
                 color: (widget.isCompleted ? Colors.green : Colors.amber[700]!).withAlpha(77),
@@ -343,15 +318,13 @@ class _SemanaEjerciciosScreenState extends State<SemanaEjerciciosScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // IMAGEN DE LA LLAMA
             Expanded(
               flex: 2,
               child: Container(
-                height: 200, 
+                height: 200,
                 alignment: Alignment.topCenter,
                 child: Image.asset(
                   'assets/images/llama.png',
@@ -382,7 +355,6 @@ class _SemanaEjerciciosScreenState extends State<SemanaEjerciciosScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // Card de motivación
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
@@ -405,13 +377,12 @@ class _SemanaEjerciciosScreenState extends State<SemanaEjerciciosScreen> {
                         fontSize: 11,
                         height: 1.3,
                       ),
-                      textAlign: TextAlign.center, 
+                      textAlign: TextAlign.center,
                     ),
                   ),
                   
                   const SizedBox(height: 12),
                   
-                  // Card de puntaje
                   Align(
                     alignment: Alignment.center,
                     child: Container(
@@ -465,7 +436,6 @@ class _SemanaEjerciciosScreenState extends State<SemanaEjerciciosScreen> {
   }
 }
 
-// CARD DE EJERCICIO
 class ExerciseCard extends StatelessWidget {
   final ExerciseItem exercise;
   final VoidCallback onTap;
@@ -481,7 +451,7 @@ class ExerciseCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 16), 
+      margin: const EdgeInsets.only(bottom: 16),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
@@ -495,13 +465,13 @@ class ExerciseCard extends StatelessWidget {
                   : (exercise.isActive
                       ? const Color(0xFFFDD835)
                       : Colors.grey[200]),
-              borderRadius: BorderRadius.circular(16), 
+              borderRadius: BorderRadius.circular(16),
               boxShadow: isCompletedVersion || exercise.isActive
                   ? [
                       BoxShadow(
                         color: const Color(0xFFFDD835).withAlpha(77),
                         blurRadius: 8,
-                        offset: const Offset(0, 2), 
+                        offset: const Offset(0, 2),
                       ),
                     ]
                   : null,
@@ -524,11 +494,11 @@ class ExerciseCard extends StatelessWidget {
                                   : Colors.black87),
                         ),
                       ),
-                      const SizedBox(height: 2), 
+                      const SizedBox(height: 2),
                       Text(
                         exercise.subtitle,
                         style: TextStyle(
-                          fontSize: 12, 
+                          fontSize: 12,
                           color: isCompletedVersion 
                               ? Colors.grey[700]
                               : (exercise.isLocked
@@ -560,7 +530,7 @@ class ExerciseCard extends StatelessWidget {
 
     if (exercise.isActive) {
       return Container(
-        padding: const EdgeInsets.all(6), 
+        padding: const EdgeInsets.all(6),
         decoration: const BoxDecoration(
           color: Color(0xFF0984E3),
           shape: BoxShape.circle,
@@ -568,7 +538,7 @@ class ExerciseCard extends StatelessWidget {
         child: const Icon(
           Icons.rocket_launch,
           color: Colors.white,
-          size: 22, 
+          size: 22,
         ),
       );
     }
@@ -576,7 +546,7 @@ class ExerciseCard extends StatelessWidget {
     return Icon(
       Icons.lock,
       color: Colors.grey[600],
-      size: 26, 
+      size: 26,
     );
   }
 }

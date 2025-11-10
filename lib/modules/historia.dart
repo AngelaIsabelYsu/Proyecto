@@ -33,7 +33,6 @@ class HistoriaScreen extends StatefulWidget {
 }
 
 class _HistoriaScreenState extends State<HistoriaScreen> {
-  // Historia 
   final List<Map<String, dynamic>> _hitosCamino = [
     {
       'descripcion': 'Los egipcios también aplicaban álgebra, usando un método llamado falsa posición para encontrar valores desconocidos.',
@@ -77,7 +76,7 @@ class _HistoriaScreenState extends State<HistoriaScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       
-      appBar: appbar_file.AppBarComponents.buildAppBar(
+      appBar: appbar_file.AppBarComponents.buildBackAppBar(
         context, 
         'SEM ${widget.numeroSemana}: ${widget.tituloSemana}'
       ),
@@ -85,17 +84,14 @@ class _HistoriaScreenState extends State<HistoriaScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // SECCIÓN SUPERIOR
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
               child: SizedBox(
                 height: 180,
                 child: Stack(
                   children: [
-                    // COLUMNA CON LOS DOS CARDS
                     Column(
                       children: [
-                        // CARD SUPERIOR
                         Expanded(
                           flex: 3,
                           child: Container(
@@ -153,7 +149,6 @@ class _HistoriaScreenState extends State<HistoriaScreen> {
 
                         const SizedBox(height: 6),
 
-                        // CARD INFERIOR
                         Expanded(
                           flex: 2,
                           child: Container(
@@ -215,7 +210,6 @@ class _HistoriaScreenState extends State<HistoriaScreen> {
                       ],
                     ),
 
-                    // LLAMA
                     Positioned(
                       right: -10,
                       top: 0,
@@ -251,13 +245,11 @@ class _HistoriaScreenState extends State<HistoriaScreen> {
               ),
             ),
 
-            // SECCIÓN DEL CAMINO CON LA HISTORIA
             SizedBox(
               width: double.infinity,
               height: 450,
               child: Stack(
                 children: [
-                  // IMAGEN DEL CAMINO
                   Image.asset(
                     'assets/images/caminoh.png',
                     width: double.infinity,
@@ -289,7 +281,6 @@ class _HistoriaScreenState extends State<HistoriaScreen> {
                     },
                   ),
 
-                  // IMÁGENES Y CARDS ALTERNADOS
                   ..._hitosCamino.map((hito) {
                     final posicion = hito['posicion'] as Offset;
                     final lado = hito['lado'] as String;
@@ -305,52 +296,33 @@ class _HistoriaScreenState extends State<HistoriaScreen> {
                       screenWidth: screenWidth,
                     );
                   }),
+
+                  Positioned(
+                    right: 15,
+                    bottom: 20,
+                    child: GestureDetector(
+                      onTap: _onContinueButtonPressed,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+                        child: const Text(
+                          'Continuar',
+                          style: TextStyle(
+                            color: Color(0xFF0664B8),
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                            decoration: TextDecoration.underline,
+                            decorationColor: Color(0xFF0664B8),
+                            decorationThickness: 1.5,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
 
-            // BOTÓN CONTINUAR 
-            Container(
-              margin: const EdgeInsets.only(top: 10, bottom: 10),
-              child: GestureDetector(
-                onTap: _onContinueButtonPressed,
-                child: Container(
-                  width: 200,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [
-                        Color(0xFF74B9FF),
-                        Color(0xFF0984E3),
-                      ],
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                    ),
-                    borderRadius: BorderRadius.circular(25),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFF0984E3).withAlpha(100),
-                        blurRadius: 15,
-                        offset: const Offset(0, 6),
-                      ),
-                    ],
-                  ),
-                  child: const Center( 
-                    child: Text(
-                      'Continuar',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: 0.5,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 10),
+            const SizedBox(height: 20),
           ],
         ),
       ),
@@ -380,7 +352,6 @@ class _HistoriaScreenState extends State<HistoriaScreen> {
           mainAxisSize: MainAxisSize.min,
           textDirection: lado == 'derecha' ? TextDirection.rtl : TextDirection.ltr,
           children: [
-            // IMAGEN
             Container(
               width: 70,
               height: 70,
@@ -419,7 +390,6 @@ class _HistoriaScreenState extends State<HistoriaScreen> {
             
             const SizedBox(width: 10),
             
-            // CARD DE TEXTO
             Flexible(
               child: Container(
                 constraints: BoxConstraints(
