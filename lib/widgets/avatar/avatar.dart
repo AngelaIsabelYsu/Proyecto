@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../widgets/appbar.dart' as appbar_file;
-import '../ranking.dart';
-import '../estadisticas.dart';
-import '../../auth/login/login_screen.dart';
+import '../../widgets/menu.dart' as menu_file;
 import 'perfilavatar.dart'; 
 
 class AvatarScreen extends StatefulWidget {
@@ -21,9 +19,10 @@ class _AvatarScreenState extends State<AvatarScreen> {
       'author': 'IGNIX',
       'name': 'Hipopótamo',
       'color': const Color(0xFFFFC1CC),
-      'description': 'Ignix no corre, ni se apura. Prefiere pensar despacio, como flotando en ideas. Cuando todo parece difícil, él sonríe y dice: "Respira... cada número tiene su ritmo". Su calma ayuda a resolver incluso los ejercicios más rebeldes.',
+      'description': 'No corre, ni se apura. Prefiere pensar despacio, como flotando en ideas. Cuando todo parece difícil, él sonríe y dice: "Respira... cada número tiene su ritmo". Su calma ayuda a resolver incluso los ejercicios más rebeldes.',
       'isEquipped': false,
-      'customName': 'IGNIX', 
+      'customName': 'IGNIX',
+      'animalType': 'hipopotamo', 
     },
     {
       'image': 'assets/images/aleon.png',
@@ -31,9 +30,10 @@ class _AvatarScreenState extends State<AvatarScreen> {
       'author': 'BRIZALI',
       'name': 'León',
       'color': const Color(0xFFFFF4CC),
-      'description': 'Brizali siempre creyó que cada problema matemático era una aventura. Cuando un estudiante dudaba, él rugía suve: "¡Tú puedes!" Con su melena brillante y corazón fuerte, enseña que el coraje es la clave para avanzar.',
+      'description': 'Siempre creyó que cada problema matemático era una aventura. Cuando un estudiante dudaba, él rugía suve: "¡Tú puedes!" Con su melena brillante y corazón fuerte, enseña que el coraje es la clave para avanzar.',
       'isEquipped': false,
-      'customName': 'BRIZALI', 
+      'customName': 'BRIZALI',
+      'animalType': 'leon',
     },
     {
       'image': 'assets/images/aconejo.png',
@@ -41,9 +41,10 @@ class _AvatarScreenState extends State<AvatarScreen> {
       'author': 'DROP!',
       'name': 'Conejo',
       'color': const Color(0xFFD4F4F4),
-      'description': 'Drop! brinca de sumas a ecuaciones como si fueran charcos. Aunque a veces se equivoca, nunca se rinde. Él cree que los errores son saltos que te llevan más alto. Su energía contagiosa motiva a aprender más!',
+      'description': 'Brinca de sumas a ecuaciones como si fueran charcos. Aunque a veces se equivoca, nunca se rinde. Él cree que los errores son saltos que te llevan más alto. Su energía contagiosa motiva a aprender más!',
       'isEquipped': false,
-      'customName': 'DROP!', 
+      'customName': 'DROP!',
+      'animalType': 'conejo',
     },
   ];
 
@@ -78,6 +79,7 @@ class _AvatarScreenState extends State<AvatarScreen> {
           backgroundColor: avatar['color'] as Color,
           description: avatar['description'] as String,
           isEquipped: avatar['isEquipped'] as bool,
+          animalType: avatar['animalType'] as String, 
           onNameChanged: (newName) {
             // Cuando se cambia el nombre en perfilavatar.dart, actualizamos aquí
             _updateAvatarName(index, newName);
@@ -99,8 +101,8 @@ class _AvatarScreenState extends State<AvatarScreen> {
       // APPBAR IMPORTADO
       appBar: appbar_file.AppBarComponents.buildAppBar(context, 'Avatar'),
 
-      // MENÚ LATERAL
-      drawer: _buildCustomDrawer(context),
+      // MENÚ LATERAL IMPORTADO
+      drawer: menu_file.MenuComponents.buildDrawer(context, currentScreen: 'avatar'),
 
       // LISTA DE AVATARS
       body: Column(
@@ -266,220 +268,6 @@ class _AvatarScreenState extends State<AvatarScreen> {
 
       // BARRA DE NAVEGACIÓN
       bottomNavigationBar: appbar_file.AppBarComponents.buildBottomNavBar(context, 0, noHighlight: true),
-    );
-  }
-
-  // CONSTRUCCIÓN DEL MENÚ LATERAL
-  Widget _buildCustomDrawer(BuildContext context) {
-    
-    // OPCIONES DEL MENÚ
-    Widget drawerOption(String title, IconData icon, VoidCallback onTap) {
-      return Container(
-        margin: const EdgeInsets.symmetric(vertical: 4),
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            onTap: onTap,
-            borderRadius: BorderRadius.circular(12),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                color: const Color.fromRGBO(255, 255, 255, 0.2),
-                border: Border.all(
-                  color: const Color.fromRGBO(255, 255, 255, 0.3),
-                  width: 1,
-                ),
-              ),
-              child: Row(
-                children: [
-                  Icon(icon, color: Colors.white, size: 22),
-                  const SizedBox(width: 16),
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const Spacer(),
-                  const Icon(
-                    Icons.chevron_right_rounded,
-                    color: Color.fromRGBO(255, 255, 255, 0.7),
-                    size: 20,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-    
-    return Drawer(
-      child: Container(
-        color: const Color(0xFF0984E3),
-        child: SizedBox(
-          width: 280,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // HEADER
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.only(top: 70.0, bottom: 30.0),
-                decoration: const BoxDecoration(
-                  color: Color(0xFF0984E3),
-                ),
-                child: Column(
-                  children: [
-                    // AVATAR
-                    Container(
-                      width: 100,
-                      height: 100,
-                      padding: const EdgeInsets.all(4),
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 167, 167, 167),
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color.fromRGBO(0, 0, 0, 0.2),
-                            blurRadius: 15,
-                            offset: const Offset(0, 8),
-                          ),
-                        ],
-                      ),
-                      child: ClipOval(
-                        child: Image.asset(
-                          'assets/images/perfil.png',
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Container(
-                              color: const Color(0xFF0984E3),
-                              child: const Icon(
-                                Icons.person,
-                                size: 40,
-                                color: Colors.white,
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    const Text(
-                      'Angela',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 24,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-                      decoration: BoxDecoration(
-                        color: const Color.fromRGBO(255, 255, 255, 0.2),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: const Text(
-                        'ID 7589654',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              
-              // OPCIONES
-              Expanded(
-                child: Container(
-                  padding: const EdgeInsets.all(20),
-                  color: const Color(0xFF0984E3),
-                  child: Column(
-                    children: [
-                      drawerOption('Ranking', Icons.leaderboard_rounded, () {
-                        Navigator.pop(context);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => const RankingScreen()),
-                        );
-                      }),
-                      drawerOption('Estadísticas', Icons.bar_chart_rounded, () {
-                        Navigator.pop(context);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => const EstadisticasScreen()),
-                        );
-                      }),
-                      drawerOption('Avatar', Icons.palette_rounded, () {
-                        Navigator.pop(context);
-                      }),
-                      
-                      const Spacer(),
-                      
-                      // BOTÓN CERRAR SESIÓN
-                      Container(
-                        margin: const EdgeInsets.only(bottom: 20),
-                        child: Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.pop(context);
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(builder: (context) => const LoginScreen()),
-                              );
-                            },
-                            borderRadius: BorderRadius.circular(12),
-                            child: Container(
-                              width: double.infinity,
-                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
-                                gradient: const LinearGradient(
-                                  colors: [Color(0xFFFF6B6B), Color(0xFFEE5A52)],
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: const Color(0xFFFF6B6B).withAlpha(77),
-                                    blurRadius: 10,
-                                    offset: const Offset(0, 5),
-                                  ),
-                                ],
-                              ),
-                              child: const Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(Icons.logout_rounded, color: Colors.white, size: 20),
-                                  SizedBox(width: 12),
-                                  Text(
-                                    'Cerrar sesión',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }

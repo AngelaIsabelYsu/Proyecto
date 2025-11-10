@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 import 'tienda.dart';
 import '../../widgets/appbar.dart' as appbar_file;
 
@@ -9,6 +10,7 @@ class AvatarDetailScreen extends StatefulWidget {
   final Color backgroundColor;
   final String description;
   final bool isEquipped;
+  final String animalType; 
   final Function(String)? onNameChanged;
   final Function(bool)? onEquippedChanged;
 
@@ -19,6 +21,7 @@ class AvatarDetailScreen extends StatefulWidget {
     required this.imagePath,
     required this.backgroundColor,
     required this.description,
+    required this.animalType, 
     this.isEquipped = false,
     this.onNameChanged,
     this.onEquippedChanged,
@@ -63,10 +66,34 @@ class _AvatarDetailScreenState extends State<AvatarDetailScreen> {
   }
 
   void _navigateToStore() {
+    // Determinar el nombre del animal y color de fondo según el tipo
+    String animalName;
+    Color storeBackgroundColor;
+
+    switch (widget.animalType) {
+      case 'leon':
+        animalName = 'León';
+        storeBackgroundColor = const Color(0xFFFFE5B4);
+        break;
+      case 'conejo':
+        animalName = 'Conejo';
+        storeBackgroundColor = const Color(0xFFD4F4F4);
+        break;
+      case 'hipopotamo':
+      default:
+        animalName = 'Hipopótamo';
+        storeBackgroundColor = const Color(0xFFFFC1CC);
+        break;
+    }
+
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => const TiendaDelAvatar(),
+        builder: (context) => TiendaDelAvatar(
+          animalType: widget.animalType,
+          animalName: animalName,
+          backgroundColor: storeBackgroundColor,
+        ),
       ),
     );
   }
@@ -79,6 +106,22 @@ class _AvatarDetailScreenState extends State<AvatarDetailScreen> {
     widget.onNameChanged?.call(newName);
   }
 
+  void _shareAvatar() {
+    Share.share(
+      '¡Mira mi avatar $_currentAuthorName! 🎮✨',
+      subject: 'Mi Avatar',
+    );
+    
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Compartiendo avatar...'),
+        backgroundColor: Color(0xFF0984E3),
+        behavior: SnackBarBehavior.floating,
+        duration: Duration(seconds: 2),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -86,39 +129,41 @@ class _AvatarDetailScreenState extends State<AvatarDetailScreen> {
       appBar: appbar_file.AppBarComponents.buildAppBar(context, 'Avatar'),
       bottomNavigationBar: appbar_file.AppBarComponents.buildBottomNavBar(context, 0, noHighlight: true),
       
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            AvatarSection(
-              imagePath: widget.imagePath,
-              backgroundColor: widget.backgroundColor,
-            ),
-            
-            const SizedBox(height: 30),
-            
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+      body: Column(
+        children: [
+          AvatarSection(
+            imagePath: widget.imagePath,
+            backgroundColor: widget.backgroundColor,
+            onShare: _shareAvatar,
+          ),
+          
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   AvatarNameSection(
                     authorName: _currentAuthorName,
                     onNameChanged: _changeAuthorName,
                   ),
                   
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 16),
                   
                   ChangeNameButton(
                     onNameChanged: _changeAuthorName,
                     currentName: _currentAuthorName,
                   ),
                   
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 16),
                   
-                  DescriptionSection(
-                    description: widget.description,
+                  Expanded(
+                    child: DescriptionSection(
+                      description: widget.description,
+                    ),
                   ),
                   
-                  const SizedBox(height: 25),
+                  const SizedBox(height: 20),
                   
                   Row(
                     children: [
@@ -138,13 +183,11 @@ class _AvatarDetailScreenState extends State<AvatarDetailScreen> {
                       ),
                     ],
                   ),
-                  
-                  const SizedBox(height: 25),
                 ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -153,84 +196,81 @@ class _AvatarDetailScreenState extends State<AvatarDetailScreen> {
 class AvatarSection extends StatelessWidget {
   final String imagePath;
   final Color backgroundColor;
+  final VoidCallback onShare;
 
   const AvatarSection({
     super.key,
     required this.imagePath,
     required this.backgroundColor,
+    required this.onShare,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Container(
-          width: double.infinity,
-          height: 320,
-          decoration: BoxDecoration(
-            color: backgroundColor,
-            borderRadius: const BorderRadius.only(
-              bottomLeft: Radius.circular(30),
-              bottomRight: Radius.circular(30),
+    return Container(
+      width: double.infinity,
+      height: MediaQuery.of(context).size.height * 0.35,
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: const BorderRadius.only(
+          bottomLeft: Radius.circular(30),
+          bottomRight: Radius.circular(30),
+        ),
+      ),
+      child: Stack(
+        children: [
+          Center(
+            child: SizedBox(
+              width: 240,
+              height: 240,
+              child: Image.asset(
+                imagePath,
+                fit: BoxFit.contain,
+                filterQuality: FilterQuality.high,
+                isAntiAlias: true,
+                errorBuilder: (context, error, stackTrace) {
+                  return const Icon(
+                    Icons.pets,
+                    size: 100,
+                    color: Colors.white,
+                  );
+                },
+              ),
             ),
           ),
-          child: Column(
-            children: [
-              const SizedBox(height: 20),
-              
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Row(
-                  children: [
-                    const Spacer(),
-                    Container(
-                      margin: const EdgeInsets.only(right: 20, top: 10),
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withAlpha(179),
-                        borderRadius: BorderRadius.circular(20),
+          
+          Positioned(
+            top: MediaQuery.of(context).padding.top + 10,
+            right: 20,
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: onShare,
+                borderRadius: BorderRadius.circular(50),
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.7),
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.1),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
                       ),
-                      child: const Text(
-                        'L.I',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              
-              const SizedBox(height: 10),
-              
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-                  child: SizedBox(
-                    width: 280,
-                    height: 280,
-                    child: Image.asset(
-                      imagePath,
-                      fit: BoxFit.contain,
-                      filterQuality: FilterQuality.high,
-                      isAntiAlias: true,
-                      errorBuilder: (context, error, stackTrace) {
-                        return const Icon(
-                          Icons.pets,
-                          size: 120,
-                          color: Colors.white,
-                        );
-                      },
-                    ),
+                    ],
+                  ),
+                  child: const Icon(
+                    Icons.share,
+                    size: 22,
+                    color: Colors.black87,
                   ),
                 ),
               ),
-            ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -459,16 +499,21 @@ class DescriptionSection extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.grey[50],
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey[200]!),
-      ),
-      child: Text(
-        description,
-        style: TextStyle(
-          fontSize: 15,
-          color: Colors.grey[800],
-          height: 1.5,
+        border: Border.all(
+          color: const Color(0xFF0984E3),
+          width: 2,
         ),
-        textAlign: TextAlign.justify,
+      ),
+      child: SingleChildScrollView(
+        child: Text(
+          description,
+          style: TextStyle(
+            fontSize: 15,
+            color: Colors.grey[800],
+            height: 1.5,
+          ),
+          textAlign: TextAlign.justify,
+        ),
       ),
     );
   }
@@ -492,16 +537,16 @@ class StoreButton extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 18),
           decoration: BoxDecoration(
-            color: const Color(0xFFE3F2FD),
+            color: const Color(0xFFFFEBEE),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: const Color(0xFF74B9FF),
+              color: const Color(0xFFF44336),
               width: 2,
             ),
           ),
           child: const Icon(
             Icons.checkroom,
-            color: Color(0xFF0984E3),
+            color: Color(0xFFF44336),
             size: 30,
           ),
         ),
@@ -539,8 +584,8 @@ class EquipButton extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: isEquipped
-                ? Color(0xFFFDD835).withAlpha(77)
-                : Color(0xFF4CAF50).withAlpha(77),
+                ? const Color(0xFFFDD835).withValues(alpha: 0.3)
+                : const Color(0xFF4CAF50).withValues(alpha: 0.3),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),

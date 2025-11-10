@@ -29,7 +29,7 @@ class _TiendaDelAvatarState extends State<TiendaDelAvatar> {
           'assets/images/aleon.png',
           'assets/images/lcp1.png',
           'assets/images/lcp2.png',
-          'assets/images/lcpo3.png',
+          'assets/images/lcp3.png',
           'assets/images/lcp4.png',
           'assets/images/lcp5.png',
           'assets/images/lcp6.png',
@@ -118,14 +118,15 @@ class _TiendaDelAvatarState extends State<TiendaDelAvatar> {
                 children: [
                   const SizedBox(height: 10),
                   SizedBox(
-                    height: 180,
+                    width: 160, // Reducido de 200 a 160 (menos ancho)
+                    height: 220, // Aumentado de 200 a 220 (más alto)
                     child: Image.asset(
                       _avatarImages[_poloSeleccionado],
                       fit: BoxFit.contain,
                       filterQuality: FilterQuality.high,
                       isAntiAlias: true,
-                      cacheWidth: 500,
-                      cacheHeight: 500,
+                      cacheWidth: 320, // Ajustado proporcionalmente
+                      cacheHeight: 440, // Ajustado proporcionalmente
                       errorBuilder: (context, error, stackTrace) {
                         return Container(
                           color: const Color(0x33FFFFFF),
@@ -134,15 +135,17 @@ class _TiendaDelAvatarState extends State<TiendaDelAvatar> {
                             children: [
                               const Icon(
                                 Icons.pets,
-                                size: 60,
+                                size: 55,
                                 color: Colors.white,
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                'Polo $_poloSeleccionado',
+                                _poloSeleccionado == 0 
+                                  ? 'Avatar original'
+                                  : 'Polo $_poloSeleccionado',
                                 style: const TextStyle(
                                   color: Colors.white,
-                                  fontSize: 14,
+                                  fontSize: 13,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -152,6 +155,7 @@ class _TiendaDelAvatarState extends State<TiendaDelAvatar> {
                       },
                     ),
                   ),
+                  const SizedBox(height: 10),
                 ],
               ),
             ),
@@ -269,8 +273,8 @@ class _TiendaDelAvatarState extends State<TiendaDelAvatar> {
                     fit: BoxFit.contain,
                     filterQuality: FilterQuality.high,
                     isAntiAlias: true,
-                    cacheWidth: 250,
-                    cacheHeight: 250,
+                    cacheWidth: 180, // Reducido para mantener proporción
+                    cacheHeight: 180,
                     errorBuilder: (context, error, stackTrace) {
                       return Container(
                         color: Colors.grey.shade100,
@@ -279,7 +283,7 @@ class _TiendaDelAvatarState extends State<TiendaDelAvatar> {
                           children: [
                             const Icon(
                               Icons.shopping_bag,
-                              size: 40,
+                              size: 38,
                               color: Colors.grey,
                             ),
                             const SizedBox(height: 6),
