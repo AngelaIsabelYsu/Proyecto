@@ -19,6 +19,34 @@ class RankingScreen extends StatefulWidget {
 
 class _RankingScreenState extends State<RankingScreen> {
   int _selectedTabIndex = 0;
+  String? selectedCareer;
+  bool _isCareerDropdownOpen = false;
+
+  final List<Map<String, dynamic>> careers = [
+    {'name': 'Administración y Emprendimiento de Negocios Digitales', 'icon': Icons.business},
+    {'name': 'Marketing Digital Analítico', 'icon': Icons.analytics},
+    {'name': 'Diseño Industrial', 'icon': Icons.design_services},
+    {'name': 'Tecnología de la Producción', 'icon': Icons.precision_manufacturing},
+    {'name': 'Producción y Gestión Industrial', 'icon': Icons.factory},
+    {'name': 'Logística Digital Integrada', 'icon': Icons.local_shipping},
+    {'name': 'Gestión de Seguridad y Salud en el Trabajo', 'icon': Icons.health_and_safety},
+    {'name': 'Topografía y Geomática', 'icon': Icons.public},
+    {'name': 'Procesos Químicos y Metalúrgicos', 'icon': Icons.science},
+    {'name': 'Operaciones Mineras', 'icon': Icons.hardware},
+    {'name': 'Operación de Plantas de Procesamiento de Minerales', 'icon': Icons.settings_applications},
+    {'name': 'Mantenimiento de Equipo Pesado', 'icon': Icons.construction},
+    {'name': 'Mecatrónica y Gestión Automotriz', 'icon': Icons.car_repair},
+    {'name': 'Gestión y Mantenimiento de Maquinaria Pesada', 'icon': Icons.build_circle},
+    {'name': 'Aviónica y Mecánica Aeronáutica', 'icon': Icons.flight},
+    {'name': 'Mantenimiento y Gestión de Plantas Industriales', 'icon': Icons.settings},
+    {'name': 'Tecnología Mecánica Eléctrica', 'icon': Icons.electrical_services},
+    {'name': 'Ciberseguridad y Auditoría Informática', 'icon': Icons.security},
+    {'name': 'Diseño y Desarrollo de Software', 'icon': Icons.code},
+    {'name': 'Diseño y Desarrollo de Simuladores y Videojuegos', 'icon': Icons.gamepad},
+    {'name': 'Administración de Redes y Comunicaciones', 'icon': Icons.wifi},
+    {'name': 'Big Data y Ciencia de Datos', 'icon': Icons.data_usage},
+    {'name': 'Modelado y Animación Digital', 'icon': Icons.animation},
+  ];
 
   // DATOS CARRERA
   final List<RankingEntry> _carreraRankingData = [
@@ -138,6 +166,134 @@ class _RankingScreenState extends State<RankingScreen> {
     );
   }
 
+  // SELECTOR DE CARRERA
+  Widget _buildCareerSelector() {
+    if (_selectedTabIndex != 1) return const SizedBox.shrink();
+    
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Column(
+        children: [
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                _isCareerDropdownOpen = !_isCareerDropdownOpen;
+              });
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              decoration: BoxDecoration(
+                color: Colors.blue.shade50,
+                borderRadius: _isCareerDropdownOpen 
+                    ? const BorderRadius.only(
+                        topLeft: Radius.circular(12),
+                        topRight: Radius.circular(12),
+                      )
+                    : BorderRadius.circular(12),
+                border: Border.all(color: Colors.blue.shade100),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    selectedCareer != null 
+                        ? careers.firstWhere((c) => c['name'] == selectedCareer)['icon'] as IconData
+                        : Icons.school,
+                    color: Colors.blue.shade700,
+                    size: 24,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      selectedCareer ?? 'Selecciona una carrera',
+                      style: TextStyle(
+                        color: Colors.blue.shade800,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  Icon(
+                    _isCareerDropdownOpen ? Icons.arrow_drop_up : Icons.arrow_drop_down,
+                    color: Colors.blue.shade700,
+                    size: 24,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          if (_isCareerDropdownOpen)
+            Container(
+              constraints: const BoxConstraints(maxHeight: 300),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(12),
+                  bottomRight: Radius.circular(12),
+                ),
+                border: Border.all(color: Colors.blue.shade100),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.shade300,
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: ListView.builder(
+                shrinkWrap: true,
+                padding: EdgeInsets.zero,
+                itemCount: careers.length,
+                itemBuilder: (context, index) {
+                  final career = careers[index];
+                  final isSelected = selectedCareer == career['name'];
+                  return InkWell(
+                    onTap: () {
+                      setState(() {
+                        selectedCareer = career['name'];
+                        _isCareerDropdownOpen = false;
+                      });
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                      decoration: BoxDecoration(
+                        color: isSelected ? Colors.blue.shade50 : Colors.transparent,
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            career['icon'] as IconData,
+                            size: 20,
+                            color: isSelected ? const Color(0xFF0984E3) : Colors.grey.shade600,
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              career['name'],
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                                color: isSelected ? const Color(0xFF0984E3) : const Color(0xFF2D3436),
+                              ),
+                            ),
+                          ),
+                          if (isSelected)
+                            const Icon(
+                              Icons.check_circle,
+                              color: Color(0xFF0984E3),
+                              size: 18,
+                            ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
   // FILA RANKING
   Widget _buildRankingRow(RankingEntry entry) {
     bool isTopThree = entry.rank <= 3;
@@ -232,47 +388,52 @@ class _RankingScreenState extends State<RankingScreen> {
           // TABS SELECCIÓN
           _buildTabs(),
           
-          // HEADER INFORMACIÓN
-          Container(
-            margin: const EdgeInsets.symmetric(vertical: 16),
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-            decoration: BoxDecoration(
-              color: Colors.blue.shade50,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.blue.shade100),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.school, color: Colors.blue.shade700, size: 20),
-                const SizedBox(width: 8),
-                Text(
-                  _selectedTabIndex == 1 
-                      ? 'Diseño y Desarrollo de Software'
-                      : 'Todas las carreras - Tecsup',
-                  style: TextStyle(
-                    color: Colors.blue.shade800,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-          ),
+          // SELECTOR DE CARRERA 
+          _buildCareerSelector(),
           
           // LISTA RANKING
           Expanded(
-            child: ListView.builder(
-              itemCount: _selectedTabIndex == 1 
-                  ? _carreraRankingData.length 
-                  : _tecsupRankingData.length,
-              itemBuilder: (context, index) {
-                final data = _selectedTabIndex == 1 
-                    ? _carreraRankingData[index] 
-                    : _tecsupRankingData[index];
-                return _buildRankingRow(data);
-              },
-            ),
+            child: (_selectedTabIndex == 1 && selectedCareer == null)
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.school_outlined,
+                          size: 80,
+                          color: Colors.grey.shade400,
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          'Selecciona una carrera',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.grey.shade600,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'para ver el ranking',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey.shade500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                : ListView.builder(
+                    itemCount: _selectedTabIndex == 1 
+                        ? _carreraRankingData.length 
+                        : _tecsupRankingData.length,
+                    itemBuilder: (context, index) {
+                      final data = _selectedTabIndex == 1 
+                          ? _carreraRankingData[index] 
+                          : _tecsupRankingData[index];
+                      return _buildRankingRow(data);
+                    },
+                  ),
           ),
         ],
       ),

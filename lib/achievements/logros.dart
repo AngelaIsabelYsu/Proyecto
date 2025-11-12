@@ -9,29 +9,19 @@ class AchievementsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
-      
-      // APPBAR
       appBar: appbar_file.AppBarComponents.buildAppBar(context, 'Logros y Recompensas'),
-      
-      // DRAWER 
       drawer: menu_file.MenuComponents.buildDrawer(context),
-      
-      // CONTENIDO
       body: const _AchievementsContent(),
-      
-      // BOTTOM NAVIGATION
       bottomNavigationBar: appbar_file.AppBarComponents.buildBottomNavBar(context, 2),
     );
   }
 }
 
-// CONTENIDO PRINCIPAL
 class _AchievementsContent extends StatelessWidget {
   const _AchievementsContent();
 
   @override
   Widget build(BuildContext context) {
-    // Datos directamente en el widget
     final achievementsData = AchievementsData(
       totalGems: 1200,
       rewards: [
@@ -40,7 +30,6 @@ class _AchievementsContent extends StatelessWidget {
           score: '20/20',
           title: 'Evaluación de SEM1',
           subtitle: 'Ecuaciones lineales',
-          percentage: 100,
           earnedPoints: 240,
           completedAt: DateTime.now().subtract(const Duration(days: 2)),
         ),
@@ -49,7 +38,6 @@ class _AchievementsContent extends StatelessWidget {
           score: '18/20',
           title: 'Evaluación de SEM2',
           subtitle: 'Ecuaciones lineales',
-          percentage: 90,
           earnedPoints: 216,
           completedAt: DateTime.now().subtract(const Duration(days: 5)),
         ),
@@ -58,7 +46,6 @@ class _AchievementsContent extends StatelessWidget {
           score: '15/20',
           title: 'Evaluación de SEM3',
           subtitle: 'Ecuaciones lineales',
-          percentage: 75,
           earnedPoints: 180,
           completedAt: DateTime.now().subtract(const Duration(days: 8)),
         ),
@@ -67,7 +54,6 @@ class _AchievementsContent extends StatelessWidget {
           score: '12/20',
           title: 'Evaluación de SEM4',
           subtitle: 'Ecuaciones lineales',
-          percentage: 60,
           earnedPoints: 144,
           completedAt: DateTime.now().subtract(const Duration(days: 12)),
         ),
@@ -90,7 +76,6 @@ class _AchievementsContent extends StatelessWidget {
   }
 }
 
-// ENCABEZADO CON TOTAL DE GEMAS
 class _GemsHeader extends StatelessWidget {
   final int gems;
 
@@ -142,7 +127,6 @@ class _GemsHeader extends StatelessWidget {
   }
 }
 
-// ENCABEZADO DE RECOMPENSAS
 class _RewardsHeader extends StatelessWidget {
   const _RewardsHeader();
 
@@ -186,7 +170,6 @@ class _RewardsHeader extends StatelessWidget {
   }
 }
 
-// LISTA DE RECOMPENSAS
 class _RewardsList extends StatelessWidget {
   final List<Reward> rewards;
 
@@ -205,7 +188,6 @@ class _RewardsList extends StatelessWidget {
   }
 }
 
-// CARD DE RECOMPENSA INDIVIDUAL
 class _RewardCard extends StatelessWidget {
   final Reward reward;
 
@@ -228,21 +210,14 @@ class _RewardCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(16), 
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Badge de puntos
             _PointsBadge(points: reward.earnedPoints),
-            
             const SizedBox(width: 12), 
-            
-            // Contenido
             Expanded(
               child: _RewardContent(reward: reward),
             ),
-            
             const SizedBox(width: 8), 
-            
-            // Ícono de logro
             _AchievementIcon(),
           ],
         ),
@@ -251,7 +226,6 @@ class _RewardCard extends StatelessWidget {
   }
 }
 
-// BADGE DE PUNTOS
 class _PointsBadge extends StatelessWidget {
   final int points;
 
@@ -285,7 +259,7 @@ class _PointsBadge extends StatelessWidget {
             style: const TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
-              fontSize: 16, 
+              fontSize: 16,
               shadows: [
                 Shadow(
                   color: Color.fromRGBO(0, 0, 0, 0.2),
@@ -299,7 +273,7 @@ class _PointsBadge extends StatelessWidget {
             'PUNTOS',
             style: TextStyle(
               color: Colors.white,
-              fontSize: 8, 
+              fontSize: 8,
               fontWeight: FontWeight.w600,
               letterSpacing: 0.5,
             ),
@@ -310,7 +284,6 @@ class _PointsBadge extends StatelessWidget {
   }
 }
 
-// CONTENIDO DE RECOMPENSA
 class _RewardContent extends StatelessWidget {
   final Reward reward;
 
@@ -324,23 +297,20 @@ class _RewardContent extends StatelessWidget {
         Text(
           reward.title,
           style: const TextStyle(
-            fontSize: 16, 
+            fontSize: 16,
             fontWeight: FontWeight.bold,
             color: Color(0xFF2C3E50),
           ),
         ),
         const SizedBox(height: 6),
         _RewardSubtitle(subtitle: reward.subtitle),
-        const SizedBox(height: 10), 
-        _ProgressBar(percentage: reward.percentage),
-        const SizedBox(height: 6), 
-        _RewardFooter(score: reward.score, percentage: reward.percentage),
+        const SizedBox(height: 10),
+        _RewardFooter(score: reward.score),
       ],
     );
   }
 }
 
-// SUBTÍTULO DE RECOMPENSA
 class _RewardSubtitle extends StatelessWidget {
   final String subtitle;
 
@@ -371,100 +341,29 @@ class _RewardSubtitle extends StatelessWidget {
   }
 }
 
-// BARRA DE PROGRESO
-class _ProgressBar extends StatelessWidget {
-  final int percentage;
-
-  const _ProgressBar({
-    required this.percentage,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Container(
-          height: 6, 
-          decoration: BoxDecoration(
-            color: Colors.grey.shade200,
-            borderRadius: BorderRadius.circular(10),
-          ),
-        ),
-        Container(
-          height: 6, 
-          width: (percentage / 100) * (MediaQuery.of(context).size.width - 200), 
-          decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [Color(0xFF9C88FF), Color(0xFF7C4DFF)],
-            ),
-            borderRadius: BorderRadius.circular(10),
-            boxShadow: [
-              BoxShadow(
-                color: const Color(0xFF7C4DFF).withAlpha(77),
-                blurRadius: 4,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-// FOOTER DE RECOMPENSA
 class _RewardFooter extends StatelessWidget {
   final String score;
-  final int percentage;
 
   const _RewardFooter({
     required this.score,
-    required this.percentage,
   });
 
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Expanded( 
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                Icons.check_circle_rounded,
-                size: 14, 
-                color: Colors.green.shade600,
-              ),
-              const SizedBox(width: 4),
-              Flexible( 
-                child: Text(
-                  'Puntaje: $score',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.green.shade700,
-                    fontWeight: FontWeight.w600,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ),
-            ],
-          ),
+        Icon(
+          Icons.check_circle_rounded,
+          size: 14,
+          color: Colors.green.shade600,
         ),
-        const SizedBox(width: 6), 
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-          decoration: BoxDecoration(
-            color: const Color(0xFF9C88FF).withAlpha(26),
-            borderRadius: BorderRadius.circular(6),
-          ),
-          child: Text(
-            '$percentage%',
-            style: const TextStyle(
-              fontSize: 11, 
-              color: Color(0xFF7C4DFF),
-              fontWeight: FontWeight.bold,
-            ),
+        const SizedBox(width: 4),
+        Text(
+          'Puntaje: $score',
+          style: TextStyle(
+            fontSize: 12,
+            color: Colors.green.shade700,
+            fontWeight: FontWeight.w600,
           ),
         ),
       ],
@@ -472,7 +371,6 @@ class _RewardFooter extends StatelessWidget {
   }
 }
 
-// ÍCONO DE LOGRO 
 class _AchievementIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -486,15 +384,13 @@ class _AchievementIcon extends StatelessWidget {
           return const Icon(
             Icons.emoji_events_rounded,
             color: Color(0xFF7C4DFF),
-            size: 40, 
+            size: 40,
           );
         },
       ),
     );
   }
 }
-
-// MODELOS DE DATOS
 
 class AchievementsData {
   final int totalGems;
@@ -511,7 +407,6 @@ class Reward {
   final String title;
   final String subtitle;
   final String score;
-  final int percentage;
   final int earnedPoints;
   final DateTime completedAt;
 
@@ -520,7 +415,6 @@ class Reward {
     required this.score,
     required this.title,
     required this.subtitle,
-    required this.percentage,
     required this.earnedPoints,
     required this.completedAt,
   });

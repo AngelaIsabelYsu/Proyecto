@@ -7,31 +7,22 @@ class GuiaSolucionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // APPBAR
-      appBar: appbar_file.AppBarComponents.buildAppBar(
+      appBar: appbar_file.AppBarComponents.buildBackAppBar(
         context, 
         'SEMANA 1: Ecuaciones lineales'
       ),
-      body: Column(
+      body: ListView(
+        padding: EdgeInsets.zero,
         children: [
-          // Header con título "GUIA DE SOLUCION"
           Container(
             color: Colors.white, 
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Row(
               children: [
-                // Icono temporal en lugar de la imagen que no carga
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF42A5F5),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: const Icon(
-                    Icons.help_outline,
-                    color: Colors.white,
-                    size: 20,
-                  ),
+                Image.asset(
+                  'assets/images/guia.png',
+                  width: 50,
+                  height: 50,
                 ),
                 const SizedBox(width: 12),
                 const Text(
@@ -42,74 +33,55 @@ class GuiaSolucionScreen extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const Spacer(),
-                // Botón de retroceso circular
-                Container(
-                  width: 36,
-                  height: 36,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF42A5F5).withAlpha(25),
-                    shape: BoxShape.circle,
-                  ),
-                  child: IconButton(
-                    icon: const Icon(Icons.arrow_back, 
-                            color: Color(0xFF42A5F5), 
-                            size: 18),
-                    padding: EdgeInsets.zero,
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                ),
               ],
             ),
           ),
           const SizedBox(height: 8),
-
-          // Lista de pasos
-          Expanded(
-            child: ListView(
-              padding: const EdgeInsets.all(16),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
               children: [
                 _buildStepCard(
-                  '1. Distribuye los números que están multiplicando paréntesis en ambos lados de la ecuación:',
-                  [
-                    'Multiplica 6 por cada término dentro del paréntesis.',
-                    'Haz lo mismo con el 13 en el otro lado.',
-                  ],
-                ),
-                const SizedBox(height: 12),
-                _buildStepCard(
-                  '2. Suma o resta términos semejantes:',
-                  [
-                    'En el lado derecho, después de distribuir, deberías combinar los términos constantes con el −14.',
-                  ],
-                ),
-                const SizedBox(height: 12),
-                _buildStepCard(
-                  '3. Pasa todos los términos con \'x\' a un lado de la ecuación y los números constantes) al otro. Usa suma o resta para moverlos.',
-                  [],
-                ),
-                const SizedBox(height: 12),
-                _buildStepCard(
-                  '4. Simplifica ambos lados para dejar una ecuación del tipo ax = b.',
-                  [],
-                ),
-                const SizedBox(height: 12),
-                _buildStepCard(
-                  '5. Finalmente, divide ambos lados entre el coeficiente de x para encontrar el valor de x.',
-                  [],
-                ),
+            '1. Distribuye los números que están multiplicando paréntesis en ambos lados de la ecuación:',
+            [
+              'Multiplica 6 por cada término dentro del paréntesis.',
+              'Haz lo mismo con el 13 en el otro lado.',
+            ],
+          ),
+          const SizedBox(height: 12),
+          _buildStepCard(
+            '2. Suma o resta términos semejantes:',
+            [
+              'En el lado derecho, después de distribuir, deberías combinar los términos constantes con el −14.',
+            ],
+          ),
+          const SizedBox(height: 12),
+          _buildStepCard(
+            '3. Pasa todos los términos con \'x\' a un lado de la ecuación y los números constantes) al otro. Usa suma o resta para moverlos.',
+            [],
+          ),
+          const SizedBox(height: 12),
+          _buildStepCard(
+            '4. Simplifica ambos lados para dejar una ecuación del tipo ax = b.',
+            [],
+          ),
+          const SizedBox(height: 12),
+          _buildStepCard(
+            '5. Finalmente, divide ambos lados entre el coeficiente de x para encontrar el valor de x.',
+            [],
+                          ),
               ],
             ),
           ),
         ],
       ),
-      // BOTTOM NAVIGATION BAR
       bottomNavigationBar: appbar_file.AppBarComponents.buildBottomNavBar(context, 1),
     );
   }
 
   Widget _buildStepCard(String title, List<String> bullets) {
     return Container(
+      margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: const Color(0xFFF48FB1),

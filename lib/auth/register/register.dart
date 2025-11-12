@@ -57,13 +57,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
       return 'Mínimo 8 caracteres';
     }
     if (!value.contains(RegExp(r'[0-9]'))) {
-      return 'Debe contener al menos un número';
+      return 'Al menos un número';
     }
     if (!value.contains(RegExp(r'[A-Z]'))) {
-      return 'Debe contener al menos una mayúscula';
+      return 'Al menos una mayúscula';
     }
     if (!value.contains(RegExp(r'[a-z]'))) {
-      return 'Debe contener al menos una minúscula';
+      return 'Al menos una minúscula';
+    }
+    if (!value.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
+      return 'Al menos un carácter especial';
     }
     return null;
   }

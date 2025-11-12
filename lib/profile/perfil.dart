@@ -1,4 +1,7 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../widgets/appbar.dart' as appbar_file;
 import '../widgets/menu.dart' as menu_file;
 
@@ -10,6 +13,9 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  String? _selectedImagePath;
+  final ImagePicker _imagePicker = ImagePicker();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,8 +39,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             child: Column(
               children: [
                 _ProfileImageSection(
-                  profileImage: profileData.profileImage,
-                  onEditPressed: _showEditProfileDialog,
+                  profileImage: _selectedImagePath ?? profileData.profileImage,
+                  onEditPressed: _showImagePickerDialog,
                 ),
                 const SizedBox(height: 30),
                 _MainCardSection(profileData: profileData),
@@ -53,8 +59,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: Column(
         children: [
           _ProfileImageSection(
-            profileImage: 'assets/images/perfil.png',
-            onEditPressed: _showEditProfileDialog,
+            profileImage: _selectedImagePath ?? 'assets/images/perfil.png',
+            onEditPressed: _showImagePickerDialog,
           ),
           const SizedBox(height: 30),
           _MainCardSection(
@@ -63,11 +69,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               name: '',
               lastName: '',
               email: '',
-              phone: '',
-              gender: '',
               career: '',
               profileImage: '',
-              joinDate: '',
+              institute: '',
               cycle: '',
             ),
           ),
@@ -84,126 +88,135 @@ class _ProfileScreenState extends State<ProfileScreen> {
       name: 'Angela',
       lastName: 'Gatito',
       email: 'angela.gatito@tecsup.edu.pe',
-      phone: '+51 987 654 321',
-      gender: 'Femenino',
       career: 'Diseño y Desarrollo de Software',
       profileImage: 'assets/images/perfil.png',
-      joinDate: 'junio de 2025',
+      institute: 'Tecsup',
       cycle: 'Sexto Ciclo',
     );
   }
 
-  void _showEditProfileDialog() {
+  void _showImagePickerDialog() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return FutureBuilder<ProfileData>(
-          future: _fetchProfileData(),
-          builder: (context, snapshot) {
-            final profileData = snapshot.data;
-            
-            return AlertDialog(
-              backgroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-              title: const Text(
-                'Editar Perfil',
-                style: TextStyle(
-                  color: Color(0xFF0984E3),
-                  fontWeight: FontWeight.bold,
-                ),
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          title: const Text(
+            'Cambiar foto de perfil',
+            style: TextStyle(
+              color: Color(0xFF0984E3),
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.photo_library, color: Color(0xFF0984E3)),
+                title: const Text('Galería'),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  _pickImageFromGallery();
+                },
               ),
-              content: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TextField(
-                      controller: TextEditingController(text: profileData?.name ?? ''),
-                      decoration: InputDecoration(
-                        labelText: 'Nombre',
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    TextField(
-                      controller: TextEditingController(text: profileData?.lastName ?? ''),
-                      decoration: InputDecoration(
-                        labelText: 'Apellidos',
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    TextField(
-                      controller: TextEditingController(text: profileData?.email ?? ''),
-                      decoration: InputDecoration(
-                        labelText: 'Email',
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    TextField(
-                      controller: TextEditingController(text: profileData?.phone ?? ''),
-                      decoration: InputDecoration(
-                        labelText: 'Teléfono',
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    TextField(
-                      controller: TextEditingController(text: profileData?.gender ?? ''),
-                      decoration: InputDecoration(
-                        labelText: 'Género',
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    TextField(
-                      controller: TextEditingController(text: profileData?.career ?? ''),
-                      decoration: InputDecoration(
-                        labelText: 'Carrera',
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    TextField(
-                      controller: TextEditingController(text: profileData?.cycle ?? ''),
-                      decoration: InputDecoration(
-                        labelText: 'Ciclo',
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                      ),
-                    ),
-                  ],
-                ),
+              ListTile(
+                leading: const Icon(Icons.photo_camera, color: Color(0xFF0984E3)),
+                title: const Text('Cámara'),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  _takePhotoWithCamera();
+                },
               ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('Cancelar'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    _updateProfile();
-                    Navigator.of(context).pop();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF0984E3),
-                    foregroundColor: Colors.white,
-                  ),
-                  child: const Text('Guardar'),
-                ),
-              ],
-            );
-          },
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancelar'),
+            ),
+          ],
         );
       },
     );
   }
 
-  void _updateProfile() {
+  Future<void> _pickImageFromGallery() async {
+    final status = await Permission.photos.request();
+    
+    if (status.isGranted) {
+      final XFile? image = await _imagePicker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 500,
+        maxHeight: 500,
+        imageQuality: 70,
+      );
+      
+      if (image != null && mounted) {
+        setState(() {
+          _selectedImagePath = image.path;
+        });
+        
+        _showSnackBar('Imagen de perfil actualizada');
+      }
+    } else {
+      _showPermissionDeniedDialog('galería');
+    }
+  }
+
+  Future<void> _takePhotoWithCamera() async {
+    final status = await Permission.camera.request();
+    
+    if (status.isGranted) {
+      final XFile? image = await _imagePicker.pickImage(
+        source: ImageSource.camera,
+        maxWidth: 500,
+        maxHeight: 500,
+        imageQuality: 70,
+      );
+      
+      if (image != null && mounted) {
+        setState(() {
+          _selectedImagePath = image.path;
+        });
+        
+        _showSnackBar('Foto de perfil actualizada');
+      }
+    } else {
+      _showPermissionDeniedDialog('cámara');
+    }
+  }
+
+  void _showSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Perfil actualizado correctamente'),
-        duration: Duration(seconds: 2),
+      SnackBar(
+        content: Text(message),
+        duration: const Duration(seconds: 2),
       ),
+    );
+  }
+
+  void _showPermissionDeniedDialog(String feature) {
+    if (!mounted) return;
+    
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Permiso requerido'),
+          content: Text('Necesitas permitir el acceso a la $feature para usar esta función.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () => openAppSettings(),
+              child: const Text('Abrir configuración'),
+            ),
+          ],
+        );
+      },
     );
   }
 }
@@ -219,6 +232,8 @@ class _ProfileImageSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isAssetImage = !profileImage.startsWith('/');
+    
     return Stack(
       alignment: Alignment.center,
       children: [
@@ -241,16 +256,27 @@ class _ProfileImageSection extends StatelessWidget {
             border: Border.all(color: const Color(0xFF0984E3), width: 4),
           ),
           child: ClipOval(
-            child: Image.asset(
-              profileImage,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) {
-                return Container(
-                  color: Colors.grey[300],
-                  child: Icon(Icons.person, size: 60, color: Colors.grey[600]),
-                );
-              },
-            ),
+            child: isAssetImage
+                ? Image.asset(
+                    profileImage,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        color: Colors.grey[300],
+                        child: Icon(Icons.person, size: 60, color: Colors.grey[600]),
+                      );
+                    },
+                  )
+                : Image.file(
+                    File(profileImage),
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        color: Colors.grey[300],
+                        child: Icon(Icons.person, size: 60, color: Colors.grey[600]),
+                      );
+                    },
+                  ),
           ),
         ),
         Positioned(
@@ -334,10 +360,8 @@ class _InfoSection extends StatelessWidget {
         _InfoRow(emoji: '👤', label: 'Nombre:', value: profileData.name),
         _InfoRow(emoji: '👥', label: 'Apellidos:', value: profileData.lastName),
         _InfoRow(emoji: '📧', label: 'Email:', value: profileData.email),
-        _InfoRow(emoji: '📱', label: 'Teléfono:', value: profileData.phone),
-        _InfoRow(emoji: '⚧️', label: 'Género:', value: profileData.gender),
         _InfoRow(emoji: '🎓', label: 'Carrera:', value: profileData.career),
-        _InfoRow(emoji: '📅', label: 'Se unió en:', value: profileData.joinDate),
+        _InfoRow(emoji: '🏫', label: 'Instituto:', value: profileData.institute),
         _InfoRow(emoji: '🔄', label: 'Ciclo:', value: profileData.cycle),
       ],
     );
@@ -428,11 +452,9 @@ class ProfileData {
   final String name;
   final String lastName;
   final String email;
-  final String phone;
-  final String gender;
   final String career;
   final String profileImage;
-  final String joinDate;
+  final String institute;
   final String cycle;
 
   ProfileData({
@@ -440,11 +462,9 @@ class ProfileData {
     required this.name,
     required this.lastName,
     required this.email,
-    required this.phone,
-    required this.gender,
     required this.career,
     required this.profileImage,
-    required this.joinDate,
+    required this.institute,
     required this.cycle,
   });
 }

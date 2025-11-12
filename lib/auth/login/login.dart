@@ -34,23 +34,25 @@ class _LoginState extends State<Login> {
       return 'La contraseña es obligatoria';
     }
     if (value.length < 8) {
-      return 'La contraseña debe tener al menos 8 caracteres';
+      return 'Mínimo 8 caracteres';
     }
     if (!value.contains(RegExp(r'[A-Z]'))) {
-      return 'La contraseña debe tener al menos una mayúscula';
-    }
-    if (!value.contains(RegExp(r'[0-9]'))) {
-      return 'La contraseña debe tener al menos un número';
+      return 'Al menos una mayúscula';
     }
     if (!value.contains(RegExp(r'[a-z]'))) {
-      return 'La contraseña debe tener al menos una minúscula';
+      return 'Al menos una minúscula';
+    }
+    if (!value.contains(RegExp(r'[0-9]'))) {
+      return 'Al menos un número';
+    }
+    if (!value.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
+      return 'Al menos un carácter especial';
     }
     return null;
   }
 
   void _login() {
     if (_formKey.currentState!.validate()) {
-      // Si la validación es exitosa, navegar al dashboard
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -70,7 +72,6 @@ class _LoginState extends State<Login> {
           child: Stack(
             alignment: Alignment.topCenter,
             children: [
-              // FONDO
               Positioned(
                 top: 0,
                 left: 0,
@@ -95,9 +96,7 @@ class _LoginState extends State<Login> {
                 ),
               ),
 
-              // LLAMA
               Positioned(
-
                 top: MediaQuery.of(context).size.height * 0.11,
                 right: 60,
                 child: SizedBox(
@@ -136,7 +135,6 @@ class _LoginState extends State<Login> {
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              // TÍTULO
                               const Text(
                                 'LOGIN',
                                 style: TextStyle(
@@ -147,7 +145,6 @@ class _LoginState extends State<Login> {
 
                               const SizedBox(height: 28),
 
-                              // CAMPO EMAIL
                               Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
@@ -175,7 +172,6 @@ class _LoginState extends State<Login> {
 
                               const SizedBox(height: 20),
 
-                              // CAMPO CONTRASEÑA
                               Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
@@ -214,7 +210,6 @@ class _LoginState extends State<Login> {
 
                               const SizedBox(height: 40), 
 
-                              // BOTÓN LOGIN
                               SizedBox(
                                 width: double.infinity,
                                 height: 56,
@@ -262,7 +257,6 @@ class _LoginState extends State<Login> {
                 ),
               ),
 
-              // FOOTER - REGISTRO
               Positioned(
                 bottom: 24,
                 left: 0,
