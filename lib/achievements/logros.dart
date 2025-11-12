@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../widgets/appbar.dart' as appbar_file; 
 import '../widgets/menu.dart' as menu_file; 
+import '../services/gemas_service.dart';
 
 class AchievementsScreen extends StatelessWidget {
   const AchievementsScreen({super.key});
@@ -22,8 +24,10 @@ class _AchievementsContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final gemasService = Provider.of<GemasService>(context);
+    
     final achievementsData = AchievementsData(
-      totalGems: 1200,
+      totalGems: gemasService.totalGemas,
       rewards: [
         Reward(
           id: '1',

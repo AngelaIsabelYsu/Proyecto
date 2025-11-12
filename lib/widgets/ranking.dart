@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../widgets/appbar.dart' as appbar_file;
-import '../widgets/menu.dart' as menu_file;
 
 class RankingEntry {
   final int rank;
@@ -48,7 +47,6 @@ class _RankingScreenState extends State<RankingScreen> {
     {'name': 'Modelado y Animación Digital', 'icon': Icons.animation},
   ];
 
-  // DATOS CARRERA
   final List<RankingEntry> _carreraRankingData = [
     RankingEntry(rank: 1, name: 'Ana García', score: 1920),
     RankingEntry(rank: 2, name: 'Carlos Rodríguez', score: 1885),
@@ -62,7 +60,6 @@ class _RankingScreenState extends State<RankingScreen> {
     RankingEntry(rank: 10, name: 'Ricardo Paredes', score: 1645),
   ];
 
-  // DATOS TECSUP
   final List<RankingEntry> _tecsupRankingData = [
     RankingEntry(rank: 1, name: 'Andrea Rojas', score: 2150),
     RankingEntry(rank: 2, name: 'Fernando Díaz', score: 2080),
@@ -85,7 +82,6 @@ class _RankingScreenState extends State<RankingScreen> {
       ),
       child: Row(
         children: [
-          // TAB TECSUP
           Expanded(
             child: Material(
               color: Colors.transparent,
@@ -123,7 +119,6 @@ class _RankingScreenState extends State<RankingScreen> {
               ),
             ),
           ),
-          // TAB CARRERA
           Expanded(
             child: Material(
               color: Colors.transparent,
@@ -166,7 +161,6 @@ class _RankingScreenState extends State<RankingScreen> {
     );
   }
 
-  // SELECTOR DE CARRERA
   Widget _buildCareerSelector() {
     if (_selectedTabIndex != 1) return const SizedBox.shrink();
     
@@ -294,7 +288,6 @@ class _RankingScreenState extends State<RankingScreen> {
     );
   }
 
-  // FILA RANKING
   Widget _buildRankingRow(RankingEntry entry) {
     bool isTopThree = entry.rank <= 3;
     
@@ -318,7 +311,6 @@ class _RankingScreenState extends State<RankingScreen> {
       ),
       child: Row(
         children: [
-          // NÚMERO RANKING
           Container(
             width: 32,
             height: 32,
@@ -338,8 +330,6 @@ class _RankingScreenState extends State<RankingScreen> {
             ),
           ),
           const SizedBox(width: 16),
-          
-          // NOMBRE
           Expanded(
             child: Text(
               entry.name,
@@ -349,8 +339,6 @@ class _RankingScreenState extends State<RankingScreen> {
               ),
             ),
           ),
-          
-          // PUNTAJE
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
@@ -375,23 +363,40 @@ class _RankingScreenState extends State<RankingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      
-      // APPBAR
-      appBar: appbar_file.AppBarComponents.buildAppBar(context, 'Ranking'),
-      
-      // MENÚ LATERAL
-      drawer: menu_file.MenuComponents.buildDrawer(context, currentScreen: 'ranking'),
-      
-      // CONTENIDO PRINCIPAL
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color(0xFF74B9FF),
+                Color(0xFF0984E3),
+              ],
+              stops: [0.0, 0.8],
+            ),
+          ),
+        ),
+        title: const Text(
+          'Ranking',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
       body: Column(
         children: [
-          // TABS SELECCIÓN
           _buildTabs(),
-          
-          // SELECTOR DE CARRERA 
           _buildCareerSelector(),
-          
-          // LISTA RANKING
           Expanded(
             child: (_selectedTabIndex == 1 && selectedCareer == null)
                 ? Center(
@@ -437,8 +442,6 @@ class _RankingScreenState extends State<RankingScreen> {
           ),
         ],
       ),
-
-      // NAVEGACIÓN INFERIOR
       bottomNavigationBar: appbar_file.AppBarComponents.buildBottomNavBar(context, 0, noHighlight: true),
     );
   }

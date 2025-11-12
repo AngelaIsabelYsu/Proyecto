@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../widgets/appbar.dart' as appbar_file;
-import '../widgets/menu.dart' as menu_file;
 
 class EstadisticasScreen extends StatefulWidget {
   const EstadisticasScreen({super.key});
@@ -15,20 +14,41 @@ class _EstadisticasScreenState extends State<EstadisticasScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      
-      // APPBAR 
-      appBar: appbar_file.AppBarComponents.buildAppBar(context, 'Estadísticas'),
-      
-      // DRAWER
-      drawer: menu_file.MenuComponents.buildDrawer(context, currentScreen: 'estadisticas'),
-      
-      // CONTENIDO PRINCIPAL - ESTADÍSTICAS
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color(0xFF74B9FF),
+                Color(0xFF0984E3),
+              ],
+              stops: [0.0, 0.8],
+            ),
+          ),
+        ),
+        title: const Text(
+          'Estadísticas',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // EVOLUCION DE PUNTAJE Y TIEMPO DEDICADO
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -44,8 +64,6 @@ class _EstadisticasScreenState extends State<EstadisticasScreen> {
               ],
             ),
             const SizedBox(height: 20),
-            
-            // PROGRESO Y LLAMA 
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -57,19 +75,14 @@ class _EstadisticasScreenState extends State<EstadisticasScreen> {
               ],
             ),
             const SizedBox(height: 20),
-            
-            // TASA DE REPETICIÓN
             _buildRepetitionRate(),
           ],
         ),
       ),
-
-      // BOTTOM NAVIGATION BAR SIN RESALTADO
       bottomNavigationBar: appbar_file.AppBarComponents.buildBottomNavBar(context, 0, noHighlight: true),
     );
   }
 
-  // GRÁFICO DE EVOLUCIÓN DE PUNTAJE
   Widget _buildScoreEvolution() {
     return Container(
       padding: const EdgeInsets.all(20),
@@ -93,8 +106,6 @@ class _EstadisticasScreenState extends State<EstadisticasScreen> {
             ),
           ),
           const SizedBox(height: 20),
-          
-          // GRÁFICO DE BARRAS
           SizedBox(
             height: 200,
             child: Column(
@@ -118,7 +129,6 @@ class _EstadisticasScreenState extends State<EstadisticasScreen> {
                     Expanded(
                       child: Stack(
                         children: [
-                          // LÍNEAS GUÍA DEL GRÁFICO
                           Column(
                             children: [
                               SizedBox(height: 40, child: const Divider(color: Colors.grey)),
@@ -128,8 +138,6 @@ class _EstadisticasScreenState extends State<EstadisticasScreen> {
                               SizedBox(height: 40, child: const Divider(color: Colors.grey)),
                             ],
                           ),
-                          
-                          // BARRAS DE DATOS
                           Positioned(
                             bottom: 0,
                             left: 0,
@@ -158,7 +166,6 @@ class _EstadisticasScreenState extends State<EstadisticasScreen> {
     );
   }
 
-  // PUNTO DE DATO INDIVIDUAL PARA EL GRÁFICO
   Widget _buildDataPoint(int percentage, String month) {
     double height = (percentage / 100) * 160;
     return Column(
@@ -184,7 +191,6 @@ class _EstadisticasScreenState extends State<EstadisticasScreen> {
     );
   }
 
-  // CARD DE TIEMPO DEDICADO
   Widget _buildTimeDedicated() {
     return Container(
       padding: const EdgeInsets.all(20),
@@ -254,7 +260,6 @@ class _EstadisticasScreenState extends State<EstadisticasScreen> {
     );
   }
 
-  // CARD DE PROGRESO 
   Widget _buildProgress() {
     return Container(
       padding: const EdgeInsets.all(18),
@@ -279,8 +284,6 @@ class _EstadisticasScreenState extends State<EstadisticasScreen> {
             ),
           ),
           const SizedBox(height: 15),
-          
-          // BARRA DE PROGRESO Y DETALLES
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -326,7 +329,6 @@ class _EstadisticasScreenState extends State<EstadisticasScreen> {
     );
   }
 
-  // IMAGEN DE LLAMA 
   Widget _buildLlamaImage() {
     return Container(
       width: 160,
@@ -354,7 +356,6 @@ class _EstadisticasScreenState extends State<EstadisticasScreen> {
     );
   }
 
-  // CARD DE TASA DE REPETICIÓN
   Widget _buildRepetitionRate() {
     return Container(
       width: double.infinity,

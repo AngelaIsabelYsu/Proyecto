@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
-import '../widgets/ranking.dart';
-import '../widgets/estadisticas.dart';
 import '../modules/modulos.dart';
 import '../achievements/logros.dart';
 import '../profile/perfil.dart';
-import '../auth/login/login_screen.dart';
 import '../dashboard/dashboard_one.dart';
-import '../widgets/avatar/avatar.dart';
 import 'historia.dart';
 
 class _TemarioColors {
@@ -42,24 +38,6 @@ class _TemarioTextStyles {
     fontSize: 10,
     fontWeight: FontWeight.bold,
   );
-  
-  static const drawerOption = TextStyle(
-    color: Colors.white,
-    fontSize: 16,
-    fontWeight: FontWeight.w600,
-  );
-  
-  static const userName = TextStyle(
-    color: Colors.white,
-    fontSize: 24,
-    fontWeight: FontWeight.w700,
-  );
-  
-  static const userId = TextStyle(
-    color: Colors.white,
-    fontSize: 14,
-    fontWeight: FontWeight.w500,
-  );
 }
 
 class TemarioScreen extends StatefulWidget {
@@ -77,7 +55,6 @@ class TemarioScreen extends StatefulWidget {
 class _TemarioScreenState extends State<TemarioScreen> {
   int _selectedIndex = 1;
 
-  // DATOS TEMAS POR MÓDULO
   List<Map<String, dynamic>> get _temas {
     if (widget.moduleType == 'applications') {
       return _temasAplicaciones;
@@ -86,14 +63,12 @@ class _TemarioScreenState extends State<TemarioScreen> {
     }
   }
 
-  // Título del módulo
   String get _moduleTitle {
     return widget.moduleType == 'applications' 
       ? 'Aplicaciones de Cálculo y Estadística'
       : 'Cálculo y Estadística';
   }
 
-  // TEMAS PARA CÁLCULO Y ESTADÍSTICA
   final List<Map<String, dynamic>> _temasCalculo = [
     {
       'numero': '1',
@@ -172,7 +147,6 @@ class _TemarioScreenState extends State<TemarioScreen> {
     },
   ];
 
-  // TEMAS PARA APLICACIONES (EJEMPLO)
   final List<Map<String, dynamic>> _temasAplicaciones = [
     {
       'numero': '1',
@@ -252,7 +226,6 @@ class _TemarioScreenState extends State<TemarioScreen> {
   }
 
   void _onTemaTapped(int index) {
-    // Navegar a la pantalla de Historia
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -277,7 +250,6 @@ class _TemarioScreenState extends State<TemarioScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: _buildAppBar(),
-      drawer: _buildCustomDrawer(),
       body: _buildBody(),
       bottomNavigationBar: _buildBottomNavBar(),
     );
@@ -297,11 +269,9 @@ class _TemarioScreenState extends State<TemarioScreen> {
           ),
         ),
       ),
-      leading: Builder(
-        builder: (context) => IconButton(
-          icon: const Icon(Icons.menu, color: Colors.white),
-          onPressed: () => Scaffold.of(context).openDrawer(),
-        ),
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back, color: Colors.white),
+        onPressed: () => Navigator.of(context).pop(),
       ),
       title: Text(
         _moduleTitle,
@@ -512,225 +482,6 @@ class _TemarioScreenState extends State<TemarioScreen> {
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
       ),
-    );
-  }
-
-  Widget _buildCustomDrawer() {
-    return Drawer(
-      child: Container(
-        color: _TemarioColors.primaryBlue,
-        child: SizedBox(
-          width: 280,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              _buildDrawerHeader(),
-              Expanded(child: _buildDrawerOptions()),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDrawerHeader() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.only(top: 70.0, bottom: 30.0),
-      decoration: const BoxDecoration(
-        color: _TemarioColors.primaryBlue,
-      ),
-      child: Column(
-        children: [
-          _buildAvatar(),
-          const SizedBox(height: 20),
-          const Text(
-            'Angela',
-            style: _TemarioTextStyles.userName,
-          ),
-          const SizedBox(height: 8),
-          _buildUserId(),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildAvatar() {
-    return Container(
-      width: 100,
-      height: 100,
-      padding: const EdgeInsets.all(4),
-      decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 167, 167, 167),
-        shape: BoxShape.circle,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withAlpha(51),
-            blurRadius: 15,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: ClipOval(
-        child: Image.asset(
-          'assets/images/perfil.png',
-          fit: BoxFit.contain,
-          errorBuilder: (context, error, stackTrace) {
-            return Container(
-              color: _TemarioColors.primaryBlue,
-              child: const Icon(
-                Icons.person,
-                size: 40,
-                color: Colors.white,
-              ),
-            );
-          },
-        ),
-      ),
-    );
-  }
-
-  Widget _buildUserId() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-      decoration: BoxDecoration(
-        color: const Color.fromRGBO(255, 255, 255, 0.2),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: const Text(
-        'ID 7589654',
-        style: _TemarioTextStyles.userId,
-      ),
-    );
-  }
-
-  Widget _buildDrawerOptions() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      color: _TemarioColors.primaryBlue,
-      child: Column(
-        children: [
-          _buildDrawerOption(
-            title: 'Ranking',
-            icon: Icons.leaderboard_rounded,
-            onTap: () => _navigateToScreen(const RankingScreen()),
-          ),
-          _buildDrawerOption(
-            title: 'Estadísticas',
-            icon: Icons.bar_chart_rounded,
-            onTap: () => _navigateToScreen(const EstadisticasScreen()),
-          ),
-          _buildDrawerOption(
-            title: 'Avatar',
-            icon: Icons.palette_rounded,
-            onTap: () => _navigateToScreen(AvatarScreen()),
-          ),
-          const Spacer(),
-          _buildLogoutButton(),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDrawerOption({
-    required String title,
-    required IconData icon,
-    required VoidCallback onTap,
-  }) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 4),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(12),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              color: const Color.fromRGBO(255, 255, 255, 0.2),
-              border: Border.all(
-                color: const Color.fromRGBO(255, 255, 255, 0.3),
-                width: 1,
-              ),
-            ),
-            child: Row(
-              children: [
-                Icon(icon, color: Colors.white, size: 22),
-                const SizedBox(width: 16),
-                Text(
-                  title,
-                  style: _TemarioTextStyles.drawerOption,
-                ),
-                const Spacer(),
-                const Icon(
-                  Icons.chevron_right_rounded,
-                  color: Color.fromRGBO(255, 255, 255, 0.7),
-                  size: 20,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildLogoutButton() {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 20),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: _logout,
-          borderRadius: BorderRadius.circular(12),
-          child: Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              gradient: const LinearGradient(
-                colors: [Color(0xFFFF6B6B), Color(0xFFEE5A52)],
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: const Color.fromRGBO(255, 107, 107, 0.3),
-                  blurRadius: 10,
-                  offset: const Offset(0, 5),
-                ),
-              ],
-            ),
-            child: const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.logout_rounded, color: Colors.white, size: 20),
-                SizedBox(width: 12),
-                Text(
-                  'Cerrar sesión',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _navigateToScreen(Widget screen) {
-    Navigator.pop(context);
-    Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
-  }
-
-  void _logout() {
-    Navigator.pop(context);
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const LoginScreen()),
     );
   }
 }

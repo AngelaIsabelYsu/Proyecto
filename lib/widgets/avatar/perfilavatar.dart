@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'tienda.dart';
 import '../../widgets/appbar.dart' as appbar_file;
 
@@ -34,55 +35,124 @@ class AvatarDetailScreen extends StatefulWidget {
 class _AvatarDetailScreenState extends State<AvatarDetailScreen> {
   late bool _isEquipped;
   late String _currentAuthorName;
+  int _poloSeleccionado = 0;
 
   @override
   void initState() {
     super.initState();
     _isEquipped = widget.isEquipped;
     _currentAuthorName = widget.authorName;
+    _cargarDatosRapido();
   }
 
-  void _toggleEquipped() {
-    setState(() {
-      _isEquipped = !_isEquipped;
-    });
+  Future<void> _cargarDatosRapido() async {
+    final prefs = await SharedPreferences.getInstance();
+    final poloSeleccionado = prefs.getInt('${widget.animalType}_poloSeleccionado') ?? 0;
+    final nombreGuardado = prefs.getString('${widget.animalType}_customName');
+    final avatarEquipado = prefs.getBool('${widget.animalType}_equipado') ?? false;
+    
+    if (mounted) {
+      setState(() {
+        _poloSeleccionado = poloSeleccionado;
+        if (nombreGuardado != null) {
+          _currentAuthorName = nombreGuardado;
+        }
+        _isEquipped = avatarEquipado;
+      });
+    }
+  }
 
-    widget.onEquippedChanged?.call(_isEquipped);
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _cargarDatosRapido();
+  }
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          _isEquipped 
-              ? 'Avatar equipado exitosamente' 
-              : 'Avatar desequipado',
+  List<String> get _avatarImages {
+    switch (widget.animalType) {
+      case 'leon':
+        return [
+          'assets/images/aleon.png',
+          'assets/images/lcp1.png',
+          'assets/images/lcp2.png',
+          'assets/images/lcp3.png',
+          'assets/images/lcp4.png',
+          'assets/images/lcp5.png',
+          'assets/images/lcp6.png',
+        ];
+      case 'conejo':
+        return [
+          'assets/images/aconejo.png',
+          'assets/images/ccp1.png',
+          'assets/images/ccp2.png',
+          'assets/images/ccp3.png',
+          'assets/images/ccp4.png',
+          'assets/images/ccp5.png',
+          'assets/images/ccp6.png',
+        ];
+      case 'hipopotamo':
+      default:
+        return [
+          'assets/images/ahipopotamo.png',
+          'assets/images/hcp1.png',
+          'assets/images/hcp2.png',
+          'assets/images/hcp3.png',
+          'assets/images/hcp4.png',
+          'assets/images/hcp5.png',
+          'assets/images/hcp6.png',
+        ];
+    }
+  }
+
+  void _toggleEquipped() async {
+    final prefs = await SharedPreferences.getInstance();
+    final nuevaEquipacion = !_isEquipped;
+    
+    await prefs.setBool('${widget.animalType}_equipado', nuevaEquipacion);
+    
+    if (mounted) {
+      setState(() {
+        _isEquipped = nuevaEquipacion;
+      });
+    }
+
+    widget.onEquippedChanged?.call(nuevaEquipacion);
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            nuevaEquipacion 
+                ? 'Avatar equipado exitosamente' 
+                : 'Avatar desequipado',
+          ),
+          backgroundColor: nuevaEquipacion 
+              ? Color(0xFF4CAF50) 
+              : Colors.grey[600],
+          behavior: SnackBarBehavior.floating,
+          duration: Duration(seconds: 2),
         ),
-        backgroundColor: _isEquipped 
-            ? const Color(0xFF4CAF50) 
-            : Colors.grey[600],
-        behavior: SnackBarBehavior.floating,
-        duration: const Duration(seconds: 2),
-      ),
-    );
+      );
+    }
   }
 
   void _navigateToStore() {
-    // Determinar el nombre del animal y color de fondo según el tipo
     String animalName;
     Color storeBackgroundColor;
 
     switch (widget.animalType) {
       case 'leon':
         animalName = 'León';
-        storeBackgroundColor = const Color(0xFFFFE5B4);
+        storeBackgroundColor = Color(0xFFFFE5B4);
         break;
       case 'conejo':
         animalName = 'Conejo';
-        storeBackgroundColor = const Color(0xFFD4F4F4);
+        storeBackgroundColor = Color(0xFFD4F4F4);
         break;
       case 'hipopotamo':
       default:
         animalName = 'Hipopótamo';
-        storeBackgroundColor = const Color(0xFFFFC1CC);
+        storeBackgroundColor = Color(0xFFFFC1CC);
         break;
     }
 
@@ -95,13 +165,20 @@ class _AvatarDetailScreenState extends State<AvatarDetailScreen> {
           backgroundColor: storeBackgroundColor,
         ),
       ),
-    );
+    ).then((_) {
+      _cargarDatosRapido();
+    });
   }
 
-  void _changeAuthorName(String newName) {
-    setState(() {
-      _currentAuthorName = newName;
-    });
+  void _changeAuthorName(String newName) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('${widget.animalType}_customName', newName);
+    
+    if (mounted) {
+      setState(() {
+        _currentAuthorName = newName;
+      });
+    }
     
     widget.onNameChanged?.call(newName);
   }
@@ -112,34 +189,65 @@ class _AvatarDetailScreenState extends State<AvatarDetailScreen> {
       subject: 'Mi Avatar',
     );
     
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Compartiendo avatar...'),
-        backgroundColor: Color(0xFF0984E3),
-        behavior: SnackBarBehavior.floating,
-        duration: Duration(seconds: 2),
-      ),
-    );
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Compartiendo avatar...'),
+          backgroundColor: Color(0xFF0984E3),
+          behavior: SnackBarBehavior.floating,
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: appbar_file.AppBarComponents.buildAppBar(context, 'Avatar'),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color(0xFF74B9FF),
+                Color(0xFF0984E3),
+              ],
+              stops: [0.0, 0.8],
+            ),
+          ),
+        ),
+        title: Text(
+          'Avatar',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: true,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
       bottomNavigationBar: appbar_file.AppBarComponents.buildBottomNavBar(context, 0, noHighlight: true),
       
       body: Column(
         children: [
           AvatarSection(
-            imagePath: widget.imagePath,
+            imagePath: _avatarImages[_poloSeleccionado],
             backgroundColor: widget.backgroundColor,
             onShare: _shareAvatar,
           ),
           
           Expanded(
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -148,14 +256,14 @@ class _AvatarDetailScreenState extends State<AvatarDetailScreen> {
                     onNameChanged: _changeAuthorName,
                   ),
                   
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16),
                   
                   ChangeNameButton(
                     onNameChanged: _changeAuthorName,
                     currentName: _currentAuthorName,
                   ),
                   
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16),
                   
                   Expanded(
                     child: DescriptionSection(
@@ -163,7 +271,7 @@ class _AvatarDetailScreenState extends State<AvatarDetailScreen> {
                     ),
                   ),
                   
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20),
                   
                   Row(
                     children: [
@@ -173,7 +281,7 @@ class _AvatarDetailScreenState extends State<AvatarDetailScreen> {
                         ),
                       ),
                       
-                      const SizedBox(width: 15),
+                      SizedBox(width: 15),
                       
                       Expanded(
                         child: EquipButton(
@@ -212,7 +320,7 @@ class AvatarSection extends StatelessWidget {
       height: MediaQuery.of(context).size.height * 0.35,
       decoration: BoxDecoration(
         color: backgroundColor,
-        borderRadius: const BorderRadius.only(
+        borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(30),
           bottomRight: Radius.circular(30),
         ),
@@ -229,7 +337,7 @@ class AvatarSection extends StatelessWidget {
                 filterQuality: FilterQuality.high,
                 isAntiAlias: true,
                 errorBuilder: (context, error, stackTrace) {
-                  return const Icon(
+                  return Icon(
                     Icons.pets,
                     size: 100,
                     color: Colors.white,
@@ -248,19 +356,19 @@ class AvatarSection extends StatelessWidget {
                 onTap: onShare,
                 borderRadius: BorderRadius.circular(50),
                 child: Container(
-                  padding: const EdgeInsets.all(12),
+                  padding: EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.7),
+                    color: Color(0xFFFFFFFF).withAlpha(178),
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.1),
+                        color: Color(0xFF000000).withAlpha(25),
                         blurRadius: 8,
-                        offset: const Offset(0, 2),
+                        offset: Offset(0, 2),
                       ),
                     ],
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.share,
                     size: 22,
                     color: Colors.black87,
@@ -293,7 +401,7 @@ class AvatarNameSection extends StatelessWidget {
         Expanded(
           child: Text(
             authorName.toUpperCase(),
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 28,
               fontWeight: FontWeight.w900,
               color: Colors.black,
@@ -307,38 +415,38 @@ class AvatarNameSection extends StatelessWidget {
         Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(8),
+              padding: EdgeInsets.all(8),
               decoration: BoxDecoration(
                 color: Colors.grey[100],
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.emoji_events,
                 color: Color(0xFFD4AF37),
                 size: 24,
               ),
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             Container(
-              padding: const EdgeInsets.all(8),
+              padding: EdgeInsets.all(8),
               decoration: BoxDecoration(
                 color: Colors.grey[100],
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.star,
                 color: Color(0xFFFDD835),
                 size: 24,
               ),
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             Container(
-              padding: const EdgeInsets.all(8),
+              padding: EdgeInsets.all(8),
               decoration: BoxDecoration(
                 color: Colors.grey[100],
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.diamond,
                 color: Color(0xFF74B9FF),
                 size: 24,
@@ -368,7 +476,7 @@ class ChangeNameButton extends StatelessWidget {
       borderRadius: BorderRadius.circular(12),
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         decoration: BoxDecoration(
           color: Colors.grey[100],
           borderRadius: BorderRadius.circular(12),
@@ -378,7 +486,7 @@ class ChangeNameButton extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.edit, color: Colors.grey[600], size: 20),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             Text(
               'Cambiar de nombre',
               style: TextStyle(
@@ -401,7 +509,7 @@ class ChangeNameButton extends StatelessWidget {
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text(
+        title: Text(
           'Cambiar nombre del avatar',
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
@@ -409,11 +517,11 @@ class ChangeNameButton extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               'Ingresa el nuevo nombre para tu avatar:',
               style: TextStyle(fontSize: 14, color: Colors.grey),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             TextField(
               controller: controller,
               decoration: InputDecoration(
@@ -421,12 +529,12 @@ class ChangeNameButton extends StatelessWidget {
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
-                contentPadding: const EdgeInsets.symmetric(
+                contentPadding: EdgeInsets.symmetric(
                   horizontal: 16,
                   vertical: 12,
                 ),
               ),
-              style: const TextStyle(fontSize: 16),
+              style: TextStyle(fontSize: 16),
               maxLength: 20,
               textCapitalization: TextCapitalization.words,
             ),
@@ -435,7 +543,7 @@ class ChangeNameButton extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text(
+            child: Text(
               'Cancelar',
               style: TextStyle(color: Colors.grey),
             ),
@@ -447,32 +555,36 @@ class ChangeNameButton extends StatelessWidget {
                 onNameChanged(newName);
                 Navigator.pop(context);
                 
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('Nombre cambiado a: $newName'),
-                    backgroundColor: const Color(0xFF4CAF50),
-                    behavior: SnackBarBehavior.floating,
-                    duration: const Duration(seconds: 2),
-                  ),
-                );
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Nombre cambiado a: $newName'),
+                      backgroundColor: Color(0xFF4CAF50),
+                      behavior: SnackBarBehavior.floating,
+                      duration: Duration(seconds: 2),
+                    ),
+                  );
+                }
               } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Por favor ingresa un nombre válido'),
-                    backgroundColor: Colors.red,
-                    behavior: SnackBarBehavior.floating,
-                    duration: Duration(seconds: 2),
-                  ),
-                );
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Por favor ingresa un nombre válido'),
+                      backgroundColor: Colors.red,
+                      behavior: SnackBarBehavior.floating,
+                      duration: Duration(seconds: 2),
+                    ),
+                  );
+                }
               }
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF0984E3),
+              backgroundColor: Color(0xFF0984E3),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
             ),
-            child: const Text(
+            child: Text(
               'Guardar',
               style: TextStyle(color: Colors.white),
             ),
@@ -495,12 +607,12 @@ class DescriptionSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(18),
+      padding: EdgeInsets.all(18),
       decoration: BoxDecoration(
         color: Colors.grey[50],
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: const Color(0xFF0984E3),
+          color: Color(0xFF0984E3),
           width: 2,
         ),
       ),
@@ -535,16 +647,16 @@ class StoreButton extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(16),
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 18),
+          padding: EdgeInsets.symmetric(vertical: 18),
           decoration: BoxDecoration(
-            color: const Color(0xFFFFEBEE),
+            color: Color(0xFFFFEBEE),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: const Color(0xFFF44336),
+              color: Color(0xFFF44336),
               width: 2,
             ),
           ),
-          child: const Icon(
+          child: Icon(
             Icons.checkroom,
             color: Color(0xFFF44336),
             size: 30,
@@ -572,22 +684,22 @@ class EquipButton extends StatelessWidget {
         gradient: LinearGradient(
           colors: isEquipped
               ? [
-                  const Color(0xFFFDD835),
-                  const Color(0xFFFBC02D),
+                  Color(0xFFFDD835),
+                  Color(0xFFFBC02D),
                 ]
               : [
-                  const Color(0xFF4CAF50),
-                  const Color(0xFF8BC34A),
+                  Color(0xFF4CAF50),
+                  Color(0xFF8BC34A),
                 ],
         ),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
             color: isEquipped
-                ? const Color(0xFFFDD835).withValues(alpha: 0.3)
-                : const Color(0xFF4CAF50).withValues(alpha: 0.3),
+                ? Color(0xFFFDD835).withAlpha(76)
+                : Color(0xFF4CAF50).withAlpha(76),
             blurRadius: 12,
-            offset: const Offset(0, 4),
+            offset: Offset(0, 4),
           ),
         ],
       ),
@@ -597,13 +709,13 @@ class EquipButton extends StatelessWidget {
           onTap: onTap,
           borderRadius: BorderRadius.circular(16),
           child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 18),
+            padding: EdgeInsets.symmetric(vertical: 18),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
                   isEquipped ? 'Usando' : 'Equipar',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,

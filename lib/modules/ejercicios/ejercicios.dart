@@ -29,13 +29,102 @@ class _EjerciciosScreenState extends State<EjerciciosScreen> {
 
   int remainingSeconds = 25 * 60;
   Timer? countdownTimer;
+  
+  int totalGemas = 0;
+  List<bool> usoGuiaPorEjercicio = [false, false, false, false];
+
+  final List<Map<String, dynamic>> _ejercicios = [
+    {
+      'ecuacion': '2x + 5 = 13',
+      'respuesta': '4'
+    },
+    {
+      'ecuacion': '3(x - 4) = 15',
+      'respuesta': '9'
+    },
+    {
+      'ecuacion': '5x - 7 = 3x + 9',
+      'respuesta': '8'
+    },
+    {
+      'ecuacion': '4(2x + 1) = 3(x - 2)',
+      'respuesta': '-2'
+    },
+    {
+      'ecuacion': 'x/3 + 2 = 5',
+      'respuesta': '9'
+    },
+    {
+      'ecuacion': '2(x + 3) - 4 = 3(x - 1)',
+      'respuesta': '5'
+    },
+    {
+      'ecuacion': '7 - 2x = 3x + 2',
+      'respuesta': '1'
+    },
+    {
+      'ecuacion': '3x/2 - 1 = x + 4',
+      'respuesta': '10'
+    },
+    {
+      'ecuacion': '2(3x - 1) = 4(x + 2)',
+      'respuesta': '5'
+    },
+    {
+      'ecuacion': '5 - x = 2x - 7',
+      'respuesta': '4'
+    },
+    {
+      'ecuacion': 'x + 8 = 3x - 4',
+      'respuesta': '6'
+    },
+    {
+      'ecuacion': '4x - 9 = 2x + 3',
+      'respuesta': '6'
+    },
+    {
+      'ecuacion': '3(x + 2) = 2(x + 5)',
+      'respuesta': '4'
+    },
+    {
+      'ecuacion': '2x/5 + 1 = 3',
+      'respuesta': '5'
+    },
+    {
+      'ecuacion': '6 - 2x = x - 9',
+      'respuesta': '5'
+    }
+  ];
+
+  List<Map<String, dynamic>> _ejerciciosSeleccionados = [];
 
   @override
   void initState() {
     super.initState();
+    _seleccionarEjerciciosAleatorios();
     answerController.text = userAnswer;
     _selectRandomPhrase();
     _startTimer();
+  }
+
+  void _seleccionarEjerciciosAleatorios() {
+    _ejerciciosSeleccionados = [];
+    List<Map<String, dynamic>> ejerciciosDisponibles = List.from(_ejercicios);
+    
+    for (int i = 0; i < totalExercises; i++) {
+      if (ejerciciosDisponibles.isNotEmpty) {
+        final randomIndex = DateTime.now().millisecondsSinceEpoch % ejerciciosDisponibles.length;
+        _ejerciciosSeleccionados.add(ejerciciosDisponibles[randomIndex]);
+        ejerciciosDisponibles.removeAt(randomIndex);
+      }
+    }
+  }
+
+  String get _ecuacionActual {
+    if (_ejerciciosSeleccionados.isNotEmpty && currentExercise <= _ejerciciosSeleccionados.length) {
+      return _ejerciciosSeleccionados[currentExercise - 1]['ecuacion'];
+    }
+    return '2x + 5 = 13';
   }
 
   void _startTimer() {
@@ -72,15 +161,144 @@ class _EjerciciosScreenState extends State<EjerciciosScreen> {
   }
 
   void _handleNoButton() {
-    // NO validamos si hay respuesta aquí, solo mostramos el mensaje motivacional
+    if (currentExercise <= totalExercises) {
+      usoGuiaPorEjercicio[currentExercise - 1] = false;
+    }
+    
     setState(() {
       showMotivationalMessage = true;
       _selectRandomPhrase();
     });
   }
 
+  void _handleSiButton() {
+    _showGuiaConfirmationDialog();
+  }
+
+  void _showGuiaConfirmationDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Container(
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 60,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    color: Colors.orange[50],
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.warning_amber_rounded,
+                    color: Colors.orange,
+                    size: 32,
+                  ),
+                ),
+                
+                const SizedBox(height: 16),
+                
+                const Text(
+                  '¿Usar guía?',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                ),
+                
+                const SizedBox(height: 12),
+                
+                const Text(
+                  'Al usar la guía se te descontarán gemas de la recompensa final.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black54,
+                    height: 1.4,
+                  ),
+                ),
+                
+                const SizedBox(height: 24),
+                
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        style: OutlinedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          side: const BorderSide(color: Colors.grey),
+                        ),
+                        child: const Text(
+                          'Cancelar',
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                    
+                    const SizedBox(width: 12),
+                    
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (currentExercise <= totalExercises) {
+                            usoGuiaPorEjercicio[currentExercise - 1] = true;
+                          }
+                          
+                          Navigator.of(context).pop();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const GuiaSolucionScreen(),
+                            ),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF65C438),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: const Text(
+                          'Usar guía',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   void _handleNextButton() {
-    // SOLO aquí validamos que haya una respuesta antes de continuar
     if (userAnswer.trim().isEmpty) {
       _showErrorDialog('Debes ingresar una respuesta antes de continuar');
       return;
@@ -93,9 +311,24 @@ class _EjerciciosScreenState extends State<EjerciciosScreen> {
         answerController.clear();
         userAnswer = '';
       } else {
+        _calcularGemasFinales();
         _navigateToCompletedScreen();
       }
     });
+  }
+
+  void _calcularGemasFinales() {
+    int gemasGanadas = 0;
+    
+    for (int i = 0; i < totalExercises; i++) {
+      if (usoGuiaPorEjercicio[i]) {
+        gemasGanadas += 60; 
+      } else {
+        gemasGanadas += 70; 
+      }
+    }
+    
+    totalGemas = gemasGanadas;
   }
 
   void _showErrorDialog(String message) {
@@ -143,17 +376,85 @@ class _EjerciciosScreenState extends State<EjerciciosScreen> {
     );
   }
 
+  void _showExitConfirmationDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: const Row(
+            children: [
+              Icon(Icons.warning_amber_rounded, color: Colors.orange, size: 28),
+              SizedBox(width: 8),
+              Text('¿Salir del ejercicio?'),
+            ],
+          ),
+          content: const Text(
+            'Si sales ahora, perderás todo tu progreso en este ejercicio.',
+            style: TextStyle(fontSize: 16),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.grey,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: Text(
+                  'Cancelar',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+              },
+              style: TextButton.styleFrom(
+                backgroundColor: const Color(0xFFE00025),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: Text(
+                  'Salir',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _navigateToCompletedScreen() {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => const EjerciciosCompletosScreen(),
+        builder: (context) => EjerciciosCompletosScreen(
+          totalGemas: totalGemas,
+        ),
       ),
     );
   }
 
   Widget _buildMessageSection() {
-    // 1. Si hay mensaje motivacional activo, mostrarlo (tiene prioridad)
     if (showMotivationalMessage) {
       return Container(
         padding: const EdgeInsets.all(16),
@@ -184,7 +485,6 @@ class _EjerciciosScreenState extends State<EjerciciosScreen> {
       );
     }
     
-    // 2. Por defecto, mostrar la pregunta de guía (incluyendo el último ejercicio)
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -210,14 +510,7 @@ class _EjerciciosScreenState extends State<EjerciciosScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const GuiaSolucionScreen(),
-                  ),
-                );
-              },
+              onPressed: _handleSiButton,
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF65C438),
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
@@ -265,14 +558,39 @@ class _EjerciciosScreenState extends State<EjerciciosScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: appbar_file.AppBarComponents.buildAppBar(
-        context,
-        'SEMANA 1: Ecuaciones lineales',
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color(0xFF74B9FF),
+                Color(0xFF0984E3),
+              ],
+              stops: [0.0, 0.8],
+            ),
+          ),
+        ),
+        title: const Text(
+          'SEMANA 1: Ecuaciones lineales',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: _showExitConfirmationDialog,
+        ),
       ),
 
       body: Column(
         children: [
-          // Barra de progreso
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             child: Column(
@@ -368,7 +686,6 @@ class _EjerciciosScreenState extends State<EjerciciosScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
                 children: [
-                  // Card del ejercicio
                   Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
@@ -416,10 +733,10 @@ class _EjerciciosScreenState extends State<EjerciciosScreen> {
                                 ),
                               ),
                               const SizedBox(height: 20),
-                              const Center(
+                              Center(
                                 child: Text(
-                                  '6(3x+5)= 13(2x+5)+ -14',
-                                  style: TextStyle(
+                                  _ecuacionActual,
+                                  style: const TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.w600,
                                     color: Colors.black87,
@@ -454,9 +771,18 @@ class _EjerciciosScreenState extends State<EjerciciosScreen> {
                                     color: Colors.black87,
                                   ),
                                   textAlign: TextAlign.center,
+                                  keyboardType: TextInputType.numberWithOptions(signed: true),
+                                  inputFormatters: [],
                                   onChanged: (value) {
+                                    final numericValue = value.replaceAll(RegExp(r'[^0-9\-]'), '');
+                                    if (numericValue != value) {
+                                      answerController.text = numericValue;
+                                      answerController.selection = TextSelection.fromPosition(
+                                        TextPosition(offset: numericValue.length)
+                                      );
+                                    }
                                     setState(() {
-                                      userAnswer = value;
+                                      userAnswer = numericValue;
                                     });
                                   },
                                 ),
@@ -470,7 +796,6 @@ class _EjerciciosScreenState extends State<EjerciciosScreen> {
 
                   const SizedBox(height: 8),
 
-                  // Botón siguiente
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
@@ -498,7 +823,6 @@ class _EjerciciosScreenState extends State<EjerciciosScreen> {
 
                   const SizedBox(height: 16),
 
-                  // Sección llama y card de ayuda
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

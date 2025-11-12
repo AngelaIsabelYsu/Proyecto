@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'estadisticas.dart';
 import 'ranking.dart';
 import 'avatar/avatar.dart';
+import '../auth/login/login_screen.dart';
 
 class MenuComponents {
   static Widget buildDrawer(BuildContext context, {String currentScreen = ''}) {
     
-    // OPCIÓN MENÚ
     Widget drawerOption(String title, IconData icon, VoidCallback onTap, bool isSelected) {
       return Container(
         margin: const EdgeInsets.symmetric(vertical: 4),
@@ -65,7 +65,6 @@ class MenuComponents {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // HEADER
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.only(top: 70.0, bottom: 30.0),
@@ -74,7 +73,6 @@ class MenuComponents {
                 ),
                 child: Column(
                   children: [
-                    // AVATAR
                     Container(
                       width: 100,
                       height: 100,
@@ -136,7 +134,6 @@ class MenuComponents {
                 ),
               ),
               
-              // OPCIONES
               Expanded(
                 child: Container(
                   padding: const EdgeInsets.all(20),
@@ -188,7 +185,6 @@ class MenuComponents {
                       
                       const Spacer(),
                       
-                      // BOTÓN CERRAR SESIÓN
                       Container(
                         margin: const EdgeInsets.only(bottom: 20),
                         child: Material(
@@ -277,11 +273,10 @@ class MenuComponents {
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Sesión cerrada correctamente'),
-                    backgroundColor: Color(0xFF4CAF50),
-                  ),
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LoginScreen()),
+                  (route) => false,
                 );
               },
               style: ElevatedButton.styleFrom(
