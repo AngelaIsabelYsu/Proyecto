@@ -4,10 +4,13 @@ import 'dart:async';
 import '../auth/login/login_screen.dart';
 import '../services/gemas_service.dart';
 
+
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => GemasService(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => GemasService()),
+      ],
       child: const MyApp(),
     ),
   );

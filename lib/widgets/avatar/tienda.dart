@@ -29,14 +29,22 @@ class _TiendaDelAvatarState extends State<TiendaDelAvatar> {
   @override
   void initState() {
     super.initState();
+    _polosComprados = [0];
+    _poloSeleccionado = 0;
     _cargarDatosGuardados();
   }
 
   Future<void> _cargarDatosGuardados() async {
     final prefs = await SharedPreferences.getInstance();
     final poloSeleccionado = prefs.getInt('${widget.animalType}_poloSeleccionado') ?? 0;
-    final polosCompradosString = prefs.getString('${widget.animalType}_polosComprados') ?? '0';
-    final polosComprados = polosCompradosString.split(',').map((e) => int.tryParse(e) ?? 0).toList();
+    final polosCompradosString = prefs.getString('${widget.animalType}_polosComprados');
+    
+    List<int> polosComprados;
+    if (polosCompradosString == null) {
+      polosComprados = [0];
+    } else {
+      polosComprados = polosCompradosString.split(',').map((e) => int.tryParse(e) ?? 0).toList();
+    }
     
     setState(() {
       _poloSeleccionado = poloSeleccionado;
@@ -109,7 +117,7 @@ class _TiendaDelAvatarState extends State<TiendaDelAvatar> {
       case 'hipopotamo':
       default:
         return {
-          1: 850,
+          1: 150,
           2: 550,
           3: 700,
           4: 900,

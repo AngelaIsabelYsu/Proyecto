@@ -149,6 +149,13 @@ class _AvatarScreenState extends State<AvatarScreen> {
     final prefs = await SharedPreferences.getInstance();
     final animalType = _avatars[index]['animalType'] as String;
     
+    if (isEquipped) {
+      for (var i = 0; i < _avatars.length; i++) {
+        final currentAnimalType = _avatars[i]['animalType'] as String;
+        await prefs.setBool('${currentAnimalType}_equipado', false);
+      }
+    }
+    
     await prefs.setBool('${animalType}_equipado', isEquipped);
     
     setState(() {
@@ -189,36 +196,8 @@ class _AvatarScreenState extends State<AvatarScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Color(0xFF74B9FF),
-                Color(0xFF0984E3),
-              ],
-              stops: [0.0, 0.8],
-            ),
-          ),
-        ),
-        title: Text(
-          'Avatar',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        centerTitle: true,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ),
+      appBar: appbar_file.AppBarComponents.buildAppBar(context, 'Avatar', currentScreen: 'avatar'),
+      drawer: appbar_file.AppBarComponents.buildMenuDrawer(context, currentScreen: 'avatar'),
       body: Column(
         children: [
           Expanded(

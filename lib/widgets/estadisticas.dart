@@ -14,36 +14,8 @@ class _EstadisticasScreenState extends State<EstadisticasScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Color(0xFF74B9FF),
-                Color(0xFF0984E3),
-              ],
-              stops: [0.0, 0.8],
-            ),
-          ),
-        ),
-        title: const Text(
-          'Estadísticas',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ),
+      appBar: appbar_file.AppBarComponents.buildAppBar(context, 'Estadísticas', currentScreen: 'estadisticas'),
+      drawer: appbar_file.AppBarComponents.buildMenuDrawer(context, currentScreen: 'estadisticas'),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(

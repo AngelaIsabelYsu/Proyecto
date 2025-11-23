@@ -2,8 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:path_provider/path_provider.dart';
 import '../widgets/appbar.dart' as appbar_file;
 import '../widgets/menu.dart' as menu_file;
 
@@ -17,40 +15,6 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   String? _selectedImagePath;
   final ImagePicker _imagePicker = ImagePicker();
-  final String _profileImageKey = 'profile_image_path';
-
-  @override
-  void initState() {
-    super.initState();
-    _loadSavedProfileImage();
-  }
-
-  Future<void> _loadSavedProfileImage() async {
-    final prefs = await SharedPreferences.getInstance();
-    final savedImagePath = prefs.getString(_profileImageKey);
-    
-    if (savedImagePath != null && await File(savedImagePath).exists()) {
-      setState(() {
-        _selectedImagePath = savedImagePath;
-      });
-    }
-  }
-
-  Future<void> _saveProfileImage(String imagePath) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_profileImageKey, imagePath);
-  }
-
-  Future<String> _copyImageToAppDirectory(String sourcePath) async {
-    final appDir = await getApplicationDocumentsDirectory();
-    final fileName = 'profile_image_${DateTime.now().millisecondsSinceEpoch}.jpg';
-    final newPath = '${appDir.path}/$fileName';
-    
-    final sourceFile = File(sourcePath);
-    await sourceFile.copy(newPath);
-    
-    return newPath;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -189,7 +153,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       );
       
       if (image != null && mounted) {
-        await _handleSelectedImage(image.path);
+        _handleSelectedImage(image.path);
       }
     } else {
       _showPermissionDeniedDialog('galería');
@@ -208,26 +172,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
       );
       
       if (image != null && mounted) {
-        await _handleSelectedImage(image.path);
+        _handleSelectedImage(image.path);
       }
     } else {
       _showPermissionDeniedDialog('cámara');
     }
   }
 
-  Future<void> _handleSelectedImage(String imagePath) async {
-    try {
-      final permanentPath = await _copyImageToAppDirectory(imagePath);
-      
-      setState(() {
-        _selectedImagePath = permanentPath;
-      });
-      
-      await _saveProfileImage(permanentPath);
-      _showSnackBar('Imagen de perfil actualizada');
-    } catch (e) {
-      _showSnackBar('Error al guardar la imagen');
-    }
+  void _handleSelectedImage(String imagePath) {
+    setState(() {
+      _selectedImagePath = imagePath;
+    });
+    
+    _showSnackBar('Imagen de perfil actualizada');
   }
 
   void _showSnackBar(String message) {
@@ -402,7 +359,7 @@ class _InfoSection extends StatelessWidget {
         const SizedBox(height: 20),
         _InfoRow(emoji: '👤', label: 'Nombre:', value: profileData.name),
         _InfoRow(emoji: '👥', label: 'Apellidos:', value: profileData.lastName),
-        _InfoRow(emoji: '📧', label: 'Email:', value: profileData.email),
+        _InfoRow(emoji: '📧', label: 'Gmail:', value: profileData.email),
         _InfoRow(emoji: '🎓', label: 'Carrera:', value: profileData.career),
         _InfoRow(emoji: '🏫', label: 'Instituto:', value: profileData.institute),
         _InfoRow(emoji: '🔄', label: 'Ciclo:', value: profileData.cycle),

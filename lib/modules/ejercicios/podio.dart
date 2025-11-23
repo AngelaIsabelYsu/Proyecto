@@ -23,7 +23,6 @@ class _PodioScreenState extends State<PodioScreen> {
   }
   
   void _inicializarRanking() {
-    // Lista de jugadores con sus puntajes (simulación)
     _todosLosJugadores = [
       {'name': 'AJISDC', 'points': 400, 'isUser': false},
       {'name': 'AJISDC', 'points': 350, 'isUser': false},
@@ -35,56 +34,46 @@ class _PodioScreenState extends State<PodioScreen> {
       {'name': 'JACNI SCNOW ANICWHW', 'points': 275, 'isUser': false},
     ];
     
-    // Agregar el usuario con su puntaje
     _todosLosJugadores.add({
       'name': 'TÚ (Angela)',
       'points': widget.puntajeUsuario,
       'isUser': true,
     });
     
-    // Ordenar por puntaje descendente
     _todosLosJugadores.sort((a, b) => (b['points'] as int).compareTo(a['points'] as int));
   }
 
   @override
   Widget build(BuildContext context) {
-    // Jugadores del podio (top 3)
     final primerLugar = _todosLosJugadores[0];
     final segundoLugar = _todosLosJugadores.length > 1 ? _todosLosJugadores[1] : null;
     final tercerLugar = _todosLosJugadores.length > 2 ? _todosLosJugadores[2] : null;
     
-    // Resto de jugadores (desde el 4to lugar)
     final restoJugadores = _todosLosJugadores.length > 3 
         ? _todosLosJugadores.sublist(3) 
         : <Map<String, dynamic>>[];
 
     return Scaffold(
       backgroundColor: Colors.white,
-      
-      // APPBAR
-      appBar: appbar_file.AppBarComponents.buildAppBar(
+      appBar: appbar_file.AppBarComponents.buildBackAppBar(
         context, 
         'SEMANA 1: Ecuaciones lineales'
       ),
-      
       body: Column(
         children: [
           Expanded(
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  // BANDERINES DECORATIVOS
                   CustomPaint(
                     size: const Size(double.infinity, 80),
                     painter: BannerPainter(),
                   ),
                   
-                  // PODIO
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
                       children: [
-                        // TROFEO Y PUNTOS DEL PRIMERO
                         const Icon(
                           Icons.emoji_events,
                           color: Color(0xFFFFA726),
@@ -102,12 +91,10 @@ class _PodioScreenState extends State<PodioScreen> {
                         
                         const SizedBox(height: 20),
                         
-                        // ESTRUCTURA DEL PODIO
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            // TERCER LUGAR
                             if (tercerLugar != null)
                               Expanded(
                                 child: _buildPodiumPlace(
@@ -122,7 +109,6 @@ class _PodioScreenState extends State<PodioScreen> {
                             
                             const SizedBox(width: 8),
                             
-                            // PRIMER LUGAR
                             Expanded(
                               child: _buildPodiumPlace(
                                 position: 1,
@@ -137,7 +123,6 @@ class _PodioScreenState extends State<PodioScreen> {
                             
                             const SizedBox(width: 8),
                             
-                            // SEGUNDO LUGAR
                             if (segundoLugar != null)
                               Expanded(
                                 child: _buildPodiumPlace(
@@ -157,7 +142,6 @@ class _PodioScreenState extends State<PodioScreen> {
                   
                   const SizedBox(height: 30),
                   
-                  // LISTA DE RANKINGS (del 4to lugar en adelante)
                   if (restoJugadores.isNotEmpty)
                     ListView.builder(
                       shrinkWrap: true,
@@ -237,8 +221,6 @@ class _PodioScreenState extends State<PodioScreen> {
           ),
         ],
       ),
-      
-      // BOTTOM NAVIGATION BAR
       bottomNavigationBar: appbar_file.AppBarComponents.buildBottomNavBar(context, 1),
     );
   }
@@ -349,7 +331,6 @@ class _PodioScreenState extends State<PodioScreen> {
   }
 }
 
-// PAINTER PARA LOS BANDERINES
 class BannerPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {

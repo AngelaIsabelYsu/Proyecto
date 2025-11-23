@@ -319,12 +319,13 @@ class _EjerciciosScreenState extends State<EjerciciosScreen> {
 
   void _calcularGemasFinales() {
     int gemasGanadas = 0;
-    
+
+//mas gemas
     for (int i = 0; i < totalExercises; i++) {
       if (usoGuiaPorEjercicio[i]) {
-        gemasGanadas += 60; 
+        gemasGanadas += 180; 
       } else {
-        gemasGanadas += 70; 
+        gemasGanadas += 190; 
       }
     }
     

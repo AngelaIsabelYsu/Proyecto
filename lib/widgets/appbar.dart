@@ -3,10 +3,11 @@ import '../dashboard/dashboard_one.dart';
 import '../modules/modulos.dart';
 import '../achievements/logros.dart';
 import '../profile/perfil.dart';
+import '../widgets/menu.dart'; // Importación añadida
 
 class AppBarComponents {
   // AppBar con menú de 3 rayitas
-  static AppBar buildAppBar(BuildContext context, String title) {
+  static AppBar buildAppBar(BuildContext context, String title, {String currentScreen = ''}) {
     return AppBar(
       backgroundColor: Colors.transparent,
       elevation: 0,
@@ -41,6 +42,11 @@ class AppBarComponents {
         ),
       ),
     );
+  }
+
+  // Método para construir el Drawer usando MenuComponents
+  static Widget buildMenuDrawer(BuildContext context, {String currentScreen = ''}) {
+    return MenuComponents.buildDrawer(context, currentScreen: currentScreen);
   }
 
   // AppBar con flecha de retroceso

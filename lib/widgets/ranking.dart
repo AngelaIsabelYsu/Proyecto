@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../widgets/appbar.dart' as appbar_file;
 
+
 class RankingEntry {
   final int rank;
   final String name;
@@ -363,36 +364,8 @@ class _RankingScreenState extends State<RankingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Color(0xFF74B9FF),
-                Color(0xFF0984E3),
-              ],
-              stops: [0.0, 0.8],
-            ),
-          ),
-        ),
-        title: const Text(
-          'Ranking',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ),
+      appBar: appbar_file.AppBarComponents.buildAppBar(context, 'Ranking', currentScreen: 'ranking'),
+      drawer: appbar_file.AppBarComponents.buildMenuDrawer(context, currentScreen: 'ranking'), // Drawer añadido
       body: Column(
         children: [
           _buildTabs(),

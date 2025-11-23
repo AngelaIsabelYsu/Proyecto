@@ -40,7 +40,7 @@ class _AvatarDetailScreenState extends State<AvatarDetailScreen> {
   @override
   void initState() {
     super.initState();
-    _isEquipped = widget.isEquipped;
+    _isEquipped = false;
     _currentAuthorName = widget.authorName;
     _cargarDatosRapido();
   }
@@ -56,6 +56,8 @@ class _AvatarDetailScreenState extends State<AvatarDetailScreen> {
         _poloSeleccionado = poloSeleccionado;
         if (nombreGuardado != null) {
           _currentAuthorName = nombreGuardado;
+        } else {
+          _currentAuthorName = widget.authorName;
         }
         _isEquipped = avatarEquipado;
       });
@@ -107,6 +109,12 @@ class _AvatarDetailScreenState extends State<AvatarDetailScreen> {
   void _toggleEquipped() async {
     final prefs = await SharedPreferences.getInstance();
     final nuevaEquipacion = !_isEquipped;
+    
+    if (nuevaEquipacion) {
+      for (final avatar in ['leon', 'conejo', 'hipopotamo']) {
+        await prefs.setBool('${avatar}_equipado', false);
+      }
+    }
     
     await prefs.setBool('${widget.animalType}_equipado', nuevaEquipacion);
     
