@@ -8,10 +8,12 @@ import '../../widgets/menu.dart';
 
 class EjerciciosCompletosScreen extends StatefulWidget {
   final int totalGemas;
+  final int totalPuntos;
   
   const EjerciciosCompletosScreen({
     super.key,
     required this.totalGemas,
+    required this.totalPuntos,
   });
 
   @override
@@ -45,7 +47,7 @@ class _EjerciciosCompletosScreenState extends State<EjerciciosCompletosScreen> {
       context,
       MaterialPageRoute(
         builder: (context) => PodioScreen(
-          puntajeUsuario: puntajeActual,
+          puntajeUsuario: widget.totalPuntos,
         ),
       ),
     );
@@ -79,89 +81,159 @@ class _EjerciciosCompletosScreenState extends State<EjerciciosCompletosScreen> {
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(16),
-              margin: const EdgeInsets.only(bottom: 16),
+              margin: const EdgeInsets.only(bottom: 20),
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    Color(0xFFB3E5FC), 
-                    Color(0xFF81D4FA), 
+                    Color(0xFF667EEA),
+                    Color(0xFF764BA2),
                   ],
                 ),
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFF0000FF).withAlpha(60),
-                    blurRadius: 12,
-                    offset: const Offset(0, 4),
+                    color: const Color(0xFF667EEA).withAlpha(100),
+                    blurRadius: 15,
+                    offset: const Offset(0, 8),
                   ),
                 ],
-                border: Border.all(
-                  color: const Color(0xFF4FC3F7),
-                  width: 2,
-                ),
               ),
               child: Column(
                 children: [
-                  const Text(
-                    'Total de gemas',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF01579B), 
-                    ),
-                  ),
-                  
-                  const SizedBox(height: 10),
-                  
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color(0xFF000000).withAlpha(20),
-                          blurRadius: 8,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                      border: Border.all(
-                        color: const Color(0xFF4FC3F7),
-                        width: 1,
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.celebration_rounded,
+                        color: Colors.white,
+                        size: 20,
                       ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text(
-                          '💎',
-                          style: TextStyle(fontSize: 24),
+                      SizedBox(width: 6),
+                      Text(
+                        '¡Felicidades!',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
                         ),
-                        const SizedBox(width: 8),
-                        Text(
-                          '${widget.totalGemas}',
-                          style: const TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF01579B), 
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                   
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 4),
                   
                   const Text(
-                    '¡Felicidades! Has completado todos los ejercicios',
+                    'Has completado todos los ejercicios',
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 13,
-                      color: Color(0xFF01579B), 
+                      fontSize: 12,
+                      color: Colors.white70,
                       fontWeight: FontWeight.w500,
                     ),
+                  ),
+                  
+                  const SizedBox(height: 16),
+                  
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.2),
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(
+                              color: Colors.white.withValues(alpha: 0.3),
+                              width: 1.5,
+                            ),
+                          ),
+                          child: Column(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(6),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withValues(alpha: 0.2),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Text(
+                                  '💎',
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                              ),
+                              const SizedBox(height: 6),
+                              Text(
+                                '${widget.totalGemas}',
+                                style: const TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  letterSpacing: 1,
+                                ),
+                              ),
+                              const Text(
+                                'Gemas',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: Colors.white70,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      
+                      const SizedBox(width: 10),
+                      
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.2),
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(
+                              color: Colors.white.withValues(alpha: 0.3),
+                              width: 1.5,
+                            ),
+                          ),
+                          child: Column(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(6),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withValues(alpha: 0.2),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Text(
+                                  '⭐',
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                              ),
+                              const SizedBox(height: 6),
+                              Text(
+                                '${widget.totalPuntos}',
+                                style: const TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  letterSpacing: 1,
+                                ),
+                              ),
+                              const Text(
+                                'Puntos',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: Colors.white70,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

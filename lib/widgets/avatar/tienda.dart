@@ -94,6 +94,43 @@ class _TiendaDelAvatarState extends State<TiendaDelAvatar> {
     }
   }
 
+  List<String> get _poloNames {
+    // index 0 = original (no polo), 1..6 correspond to polos
+    switch (widget.animalType) {
+      case 'leon':
+        return [
+          'Original',
+          'Polo Safari',
+          'Polo Rayado',
+          'Polo Real',
+          'Polo Tropical',
+          'Polo Dorado',
+          'Polo Noche',
+        ];
+      case 'conejo':
+        return [
+          'Original',
+          'Polo Primavera',
+          'Polo Lazo',
+          'Polo Picnic',
+          'Polo Floral',
+          'Polo Pastel',
+          'Polo Neon',
+        ];
+      case 'hipopotamo':
+      default:
+        return [
+          'Original',
+          'Polo Safari',
+          'Polo Azul',
+          'Polo Marino',
+          'Polo Tropical',
+          'Polo Geométrico',
+          'Polo Neón',
+        ];
+    }
+  }
+
   Map<int, int> get _preciosPolos {
     switch (widget.animalType) {
       case 'leon':
@@ -131,6 +168,7 @@ class _TiendaDelAvatarState extends State<TiendaDelAvatar> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
+        final nombrePolo = _poloNames[numeroPolo];
         return AlertDialog(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
@@ -143,7 +181,7 @@ class _TiendaDelAvatarState extends State<TiendaDelAvatar> {
             ),
           ),
           content: Text(
-            '¿Estás seguro de que quieres comprar el Polo $numeroPolo por $precio gemas?',
+            '¿Estás seguro de que quieres comprar "$nombrePolo" (Polo $numeroPolo) por $precio gemas?',
             style: TextStyle(fontSize: 16),
           ),
           actions: [
@@ -189,9 +227,10 @@ class _TiendaDelAvatarState extends State<TiendaDelAvatar> {
       });
       _guardarDatos();
       
+      final nombrePolo = _poloNames[numeroPolo];
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('¡Polo $numeroPolo comprado por $precio gemas!'),
+          content: Text('¡$nombrePolo comprado por $precio gemas!'),
           backgroundColor: const Color(0xFF4CAF50),
         ),
       );
@@ -333,9 +372,9 @@ class _TiendaDelAvatarState extends State<TiendaDelAvatar> {
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                _poloSeleccionado == 0 
-                                  ? 'Avatar original'
-                                  : 'Polo $_poloSeleccionado',
+                                  _poloSeleccionado == 0
+                                    ? 'Avatar original'
+                                    : _poloNames[_poloSeleccionado],
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 13,
@@ -459,7 +498,7 @@ class _TiendaDelAvatarState extends State<TiendaDelAvatar> {
                             ),
                             const SizedBox(height: 6),
                             Text(
-                              'Polo $numeroPolo',
+                              _poloNames[numeroPolo],
                               style: TextStyle(
                                 fontSize: 10,
                                 color: estaComprado ? Colors.grey : Colors.grey.shade400,
@@ -510,6 +549,16 @@ class _TiendaDelAvatarState extends State<TiendaDelAvatar> {
             ),
           ),
           const SizedBox(height: 8),
+          Text(
+            _poloNames[numeroPolo],
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: estaComprado ? (estaSeleccionado ? const Color(0xFF4CAF50) : const Color(0xFF42A5F5)) : Colors.grey,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 6),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

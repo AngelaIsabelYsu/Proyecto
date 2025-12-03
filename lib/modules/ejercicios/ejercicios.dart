@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../widgets/appbar.dart' as appbar_file;
+import '../../services/gemas_service.dart';
 import 'ayuda.dart';
 import 'ejercicios_completos.dart';
 
@@ -30,70 +32,25 @@ class _EjerciciosScreenState extends State<EjerciciosScreen> {
   int remainingSeconds = 25 * 60;
   Timer? countdownTimer;
   
-  int totalGemas = 0;
-  List<bool> usoGuiaPorEjercicio = [false, false, false, false];
+  List<Map<String, dynamic>> resultadosEjercicios = [];
+  bool usoGuiaActual = false;
 
   final List<Map<String, dynamic>> _ejercicios = [
-    {
-      'ecuacion': '2x + 5 = 13',
-      'respuesta': '4'
-    },
-    {
-      'ecuacion': '3(x - 4) = 15',
-      'respuesta': '9'
-    },
-    {
-      'ecuacion': '5x - 7 = 3x + 9',
-      'respuesta': '8'
-    },
-    {
-      'ecuacion': '4(2x + 1) = 3(x - 2)',
-      'respuesta': '-2'
-    },
-    {
-      'ecuacion': 'x/3 + 2 = 5',
-      'respuesta': '9'
-    },
-    {
-      'ecuacion': '2(x + 3) - 4 = 3(x - 1)',
-      'respuesta': '5'
-    },
-    {
-      'ecuacion': '7 - 2x = 3x + 2',
-      'respuesta': '1'
-    },
-    {
-      'ecuacion': '3x/2 - 1 = x + 4',
-      'respuesta': '10'
-    },
-    {
-      'ecuacion': '2(3x - 1) = 4(x + 2)',
-      'respuesta': '5'
-    },
-    {
-      'ecuacion': '5 - x = 2x - 7',
-      'respuesta': '4'
-    },
-    {
-      'ecuacion': 'x + 8 = 3x - 4',
-      'respuesta': '6'
-    },
-    {
-      'ecuacion': '4x - 9 = 2x + 3',
-      'respuesta': '6'
-    },
-    {
-      'ecuacion': '3(x + 2) = 2(x + 5)',
-      'respuesta': '4'
-    },
-    {
-      'ecuacion': '2x/5 + 1 = 3',
-      'respuesta': '5'
-    },
-    {
-      'ecuacion': '6 - 2x = x - 9',
-      'respuesta': '5'
-    }
+    {'ecuacion': '2x + 5 = 13', 'respuesta': '4'},
+    {'ecuacion': '3(x - 4) = 15', 'respuesta': '9'},
+    {'ecuacion': '5x - 7 = 3x + 9', 'respuesta': '8'},
+    {'ecuacion': '4(2x + 1) = 3(x - 2)', 'respuesta': '-2'},
+    {'ecuacion': 'x/3 + 2 = 5', 'respuesta': '9'},
+    {'ecuacion': '2(x + 3) - 4 = 3(x - 1)', 'respuesta': '5'},
+    {'ecuacion': '7 - 2x = 3x + 2', 'respuesta': '1'},
+    {'ecuacion': '3x/2 - 1 = x + 4', 'respuesta': '10'},
+    {'ecuacion': '2(3x - 1) = 4(x + 2)', 'respuesta': '5'},
+    {'ecuacion': '5 - x = 2x - 7', 'respuesta': '4'},
+    {'ecuacion': 'x + 8 = 3x - 4', 'respuesta': '6'},
+    {'ecuacion': '4x - 9 = 2x + 3', 'respuesta': '6'},
+    {'ecuacion': '3(x + 2) = 2(x + 5)', 'respuesta': '4'},
+    {'ecuacion': '2x/5 + 1 = 3', 'respuesta': '5'},
+    {'ecuacion': '6 - 2x = x - 9', 'respuesta': '5'}
   ];
 
   List<Map<String, dynamic>> _ejerciciosSeleccionados = [];
@@ -161,10 +118,7 @@ class _EjerciciosScreenState extends State<EjerciciosScreen> {
   }
 
   void _handleNoButton() {
-    if (currentExercise <= totalExercises) {
-      usoGuiaPorEjercicio[currentExercise - 1] = false;
-    }
-    
+    usoGuiaActual = false;
     setState(() {
       showMotivationalMessage = true;
       _selectRandomPhrase();
@@ -220,7 +174,7 @@ class _EjerciciosScreenState extends State<EjerciciosScreen> {
                 const SizedBox(height: 12),
                 
                 const Text(
-                  'Al usar la guía se te descontarán gemas de la recompensa final.',
+                  'Al usar la guía se te descontarán gemas y puntos de la recompensa final.',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 16,
@@ -260,10 +214,7 @@ class _EjerciciosScreenState extends State<EjerciciosScreen> {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
-                          if (currentExercise <= totalExercises) {
-                            usoGuiaPorEjercicio[currentExercise - 1] = true;
-                          }
-                          
+                          usoGuiaActual = true;
                           Navigator.of(context).pop();
                           Navigator.push(
                             context,
@@ -298,11 +249,26 @@ class _EjerciciosScreenState extends State<EjerciciosScreen> {
     );
   }
 
-  void _handleNextButton() {
+  Future<void> _handleNextButton() async {
     if (userAnswer.trim().isEmpty) {
       _showErrorDialog('Debes ingresar una respuesta antes de continuar');
       return;
     }
+
+    final gemasService = Provider.of<GemasService>(context, listen: false);
+    
+    final respuestaCorrecta = _ejerciciosSeleccionados[currentExercise - 1]['respuesta'];
+    final esCorrecto = userAnswer == respuestaCorrecta;
+
+    final resultado = await gemasService.enviarEjercicioAlBackend(
+      userId: 'usuario_actual_id',
+      ejercicioId: 'ejercicio_$currentExercise',
+      respuesta: userAnswer,
+      esCorrecto: esCorrecto,
+      usoGuia: usoGuiaActual,
+    );
+
+    resultadosEjercicios.add(resultado);
 
     setState(() {
       showMotivationalMessage = false;
@@ -310,26 +276,11 @@ class _EjerciciosScreenState extends State<EjerciciosScreen> {
         currentExercise++;
         answerController.clear();
         userAnswer = '';
+        usoGuiaActual = false;
       } else {
-        _calcularGemasFinales();
         _navigateToCompletedScreen();
       }
     });
-  }
-
-  void _calcularGemasFinales() {
-    int gemasGanadas = 0;
-
-//mas gemas
-    for (int i = 0; i < totalExercises; i++) {
-      if (usoGuiaPorEjercicio[i]) {
-        gemasGanadas += 180; 
-      } else {
-        gemasGanadas += 190; 
-      }
-    }
-    
-    totalGemas = gemasGanadas;
   }
 
   void _showErrorDialog(String message) {
@@ -445,11 +396,26 @@ class _EjerciciosScreenState extends State<EjerciciosScreen> {
   }
 
   void _navigateToCompletedScreen() {
+    int gemasTotalesGanadas = 0;
+    int puntosTotalesGanados = 0;
+
+    for (var resultado in resultadosEjercicios) {
+      if (resultado['esCorrecto']) {
+        // Conversión explícita para evitar error de tipo 'num'
+        final gemas = resultado['gemasGanadas'] as int? ?? 0;
+        final puntos = resultado['puntosGanados'] as int? ?? 0;
+        
+        gemasTotalesGanadas += gemas;
+        puntosTotalesGanados += puntos;
+      }
+    }
+
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
         builder: (context) => EjerciciosCompletosScreen(
-          totalGemas: totalGemas,
+          totalGemas: gemasTotalesGanadas,
+          totalPuntos: puntosTotalesGanados,
         ),
       ),
     );

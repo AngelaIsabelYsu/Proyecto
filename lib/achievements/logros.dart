@@ -28,6 +28,7 @@ class _AchievementsContent extends StatelessWidget {
     
     final achievementsData = AchievementsData(
       totalGems: gemasService.totalGemas,
+      totalPoints: 2150,
       rewards: [
         Reward(
           id: '1',
@@ -35,6 +36,7 @@ class _AchievementsContent extends StatelessWidget {
           title: 'Evaluación de SEM1',
           subtitle: 'Ecuaciones lineales',
           earnedPoints: 240,
+          earnedGems: 24,
           completedAt: DateTime.now().subtract(const Duration(days: 2)),
         ),
         Reward(
@@ -43,6 +45,7 @@ class _AchievementsContent extends StatelessWidget {
           title: 'Evaluación de SEM2',
           subtitle: 'Ecuaciones lineales',
           earnedPoints: 216,
+          earnedGems: 22,
           completedAt: DateTime.now().subtract(const Duration(days: 5)),
         ),
         Reward(
@@ -51,6 +54,7 @@ class _AchievementsContent extends StatelessWidget {
           title: 'Evaluación de SEM3',
           subtitle: 'Ecuaciones lineales',
           earnedPoints: 180,
+          earnedGems: 18,
           completedAt: DateTime.now().subtract(const Duration(days: 8)),
         ),
         Reward(
@@ -59,6 +63,7 @@ class _AchievementsContent extends StatelessWidget {
           title: 'Evaluación de SEM4',
           subtitle: 'Ecuaciones lineales',
           earnedPoints: 144,
+          earnedGems: 14,
           completedAt: DateTime.now().subtract(const Duration(days: 12)),
         ),
       ],
@@ -69,7 +74,10 @@ class _AchievementsContent extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _GemsHeader(gems: achievementsData.totalGems),
+          _StatsHeader(
+            gems: achievementsData.totalGems,
+            points: achievementsData.totalPoints,
+          ),
           const SizedBox(height: 30),
           const _RewardsHeader(),
           const SizedBox(height: 20),
@@ -80,53 +88,104 @@ class _AchievementsContent extends StatelessWidget {
   }
 }
 
-class _GemsHeader extends StatelessWidget {
+class _StatsHeader extends StatelessWidget {
   final int gems;
+  final int points;
 
-  const _GemsHeader({required this.gems});
+  const _StatsHeader({required this.gems, required this.points});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: const Color(0xFF9C88FF), 
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withAlpha(13),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Text(
-            'Total de gemas',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-              color: Colors.white,
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            decoration: BoxDecoration(
+              color: const Color(0xFFD92A2A), 
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withAlpha(13),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  '💎',
+                  style: TextStyle(fontSize: 18),
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  gems.toString(),
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(width: 4),
+                const Text(
+                  'Gemas',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
             ),
           ),
-          const SizedBox(width: 8),
-          const Text(
-            '💎',
-            style: TextStyle(fontSize: 24),
-          ),
-          const SizedBox(width: 8),
-          Text(
-            gems.toString(),
-            style: const TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            decoration: BoxDecoration(
+              color: const Color(0xFF4CAF50), 
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withAlpha(13),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  '⭐',
+                  style: TextStyle(fontSize: 18),
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  points.toString(),
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(width: 4),
+                const Text(
+                  'Puntos',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
@@ -216,7 +275,10 @@ class _RewardCard extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            _PointsBadge(points: reward.earnedPoints),
+            _PointsBadge(
+              points: reward.earnedPoints,
+              gems: reward.earnedGems,
+            ),
             const SizedBox(width: 12), 
             Expanded(
               child: _RewardContent(reward: reward),
@@ -232,14 +294,15 @@ class _RewardCard extends StatelessWidget {
 
 class _PointsBadge extends StatelessWidget {
   final int points;
+  final int gems;
 
-  const _PointsBadge({required this.points});
+  const _PointsBadge({required this.points, required this.gems});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 60, 
-      height: 60, 
+      width: 65, 
+      height: 65, 
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
@@ -263,7 +326,7 @@ class _PointsBadge extends StatelessWidget {
             style: const TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
-              fontSize: 16,
+              fontSize: 15,
               shadows: [
                 Shadow(
                   color: Color.fromRGBO(0, 0, 0, 0.2),
@@ -274,13 +337,32 @@ class _PointsBadge extends StatelessWidget {
             ),
           ),
           const Text(
-            'PUNTOS',
+            'pts',
             style: TextStyle(
               color: Colors.white,
-              fontSize: 8,
+              fontSize: 9,
               fontWeight: FontWeight.w600,
               letterSpacing: 0.5,
             ),
+          ),
+          const SizedBox(height: 2),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                '💎',
+                style: TextStyle(fontSize: 10),
+              ),
+              const SizedBox(width: 2),
+              Text(
+                '+$gems',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -398,10 +480,12 @@ class _AchievementIcon extends StatelessWidget {
 
 class AchievementsData {
   final int totalGems;
+  final int totalPoints;
   final List<Reward> rewards;
 
   AchievementsData({
     required this.totalGems,
+    required this.totalPoints,
     required this.rewards,
   });
 }
@@ -412,6 +496,7 @@ class Reward {
   final String subtitle;
   final String score;
   final int earnedPoints;
+  final int earnedGems;
   final DateTime completedAt;
 
   Reward({
@@ -420,6 +505,7 @@ class Reward {
     required this.title,
     required this.subtitle,
     required this.earnedPoints,
+    required this.earnedGems,
     required this.completedAt,
   });
 }
